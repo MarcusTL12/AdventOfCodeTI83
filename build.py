@@ -7,7 +7,7 @@ day = sys.argv[2]
 part = sys.argv[3]
 
 asm_path = f"{year}/day{day}/part{part}.asm"
-out_path = f"build/{year}-{day}p{part}.83g"
+out_path = f"build/{year}-{day}p{part}.83p"
 
 os.makedirs("build", exist_ok=True)
 
