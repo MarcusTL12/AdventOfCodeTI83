@@ -12,8 +12,9 @@ main:
     ld hl, 0             ; hl = 0
 
     loop1:
-        bcall(_cphlde)
-        jp z, loop1_exit
+        bcall(_cphlde)   ; if hl == -1
+        jp z, loop1_exit ; break;
+
         ld a, (bc)       ; a = *bc
         inc bc           ; bc += 1
         cp 40            ; if a != 40
