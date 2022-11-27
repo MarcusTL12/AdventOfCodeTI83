@@ -47,6 +47,7 @@ hex_dehl:
         call add_a2hl
         ld (hl), e
 
+        inc c
         djnz hex_dehl_loop
 
     ret
