@@ -7,20 +7,17 @@ main:
     bcall(_clrscrf)
     bcall(_homeup)
 
-    ld de, 31a7h
-    ld hl, 82bfh
-    call hex_dehl
-
-    ld hl, saferam1
-    ld b, 8
-    call print_str_len
+    ld hl, input
+    ld b, 4
+    call print_bcd
 
     bcall(_getkey) ; Pause
     ret
 
 ; #include "../../util/parse_u8.asm"
-#include "../../util/print_str_len.asm"
-#include "../../util/u32/hex_dehl.asm"
+; #include "../../util/print_str_len.asm"
+#include "../../util/print_bcd.asm"
+; #include "../../util/u32/hex_dehl.asm"
 
 input:
-    .db "9x253"
+    .db 38,89,65,49
