@@ -7,11 +7,17 @@ main:
     bcall(_clrscrf)
     bcall(_homeup)
 
-    ld a, 44
-    daa
-    ld l, a
-    ld h, 0
-    bcall(_disphl)
+    ld hl, input
+    ld de, output
+    ld a, 4
+    ld (saferam1), a
+    inc a
+    ld (saferam1 + 1), a
+    call bcd_mem
+
+    ld hl, output
+    ld b, 5
+    call print_bcd
 
     bcall(_getkey) ; Pause
     ret
@@ -19,8 +25,10 @@ main:
 ; #include "../../util/parse_u8.asm"
 ; #include "../../util/print_str_len.asm"
 #include "../../util/print_bcd.asm"
-#include "../../util/u32/bcd_u32.asm"
+#include "../../util/bcd_mem.asm"
 
 input:
-    .dw 12609
-    .db 89
+    .dw bb40h,e64dh
+
+output:
+    .db 0,0,0,0,0

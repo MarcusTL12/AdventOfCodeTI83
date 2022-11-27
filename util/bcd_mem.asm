@@ -5,10 +5,10 @@
 #include "lshft_mem.asm"
 
 ; inputs:
-;   hl: pointer to integer
-;   de: pointer to bcd string
-;   saferam1[0]: number of bytes in integer, max 16
-;   saferam1[1]: number of bytes in bcd
+;   hl: pointer to input
+;   de: pointer to bcd output
+;   saferam1[0]: number of bytes in input, max 16
+;   saferam1[1]: number of bytes in bcd output
 ; destroys:
 ;   zeroes integer memory
 bcd_mem:
