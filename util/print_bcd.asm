@@ -4,7 +4,7 @@
 #include "add_a2hl.asm"
 
 ; hl: pointer to bcd (least significant first)
-; b: number of bytes (halv number of digits)
+; b: number of bytes (half number of digits)
 ; destroyed: d
 print_bcd:
     ld a, b

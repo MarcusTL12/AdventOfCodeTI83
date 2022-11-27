@@ -7,9 +7,11 @@ main:
     bcall(_clrscrf)
     bcall(_homeup)
 
-    ld hl, input
-    ld b, 4
-    call print_bcd
+    ld a, 44
+    daa
+    ld l, a
+    ld h, 0
+    bcall(_disphl)
 
     bcall(_getkey) ; Pause
     ret
@@ -17,7 +19,8 @@ main:
 ; #include "../../util/parse_u8.asm"
 ; #include "../../util/print_str_len.asm"
 #include "../../util/print_bcd.asm"
-; #include "../../util/u32/hex_dehl.asm"
+#include "../../util/u32/bcd_u32.asm"
 
 input:
-    .db 38,89,65,49
+    .dw 12609
+    .db 89
