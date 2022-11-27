@@ -16,9 +16,9 @@ div_dehl_c_loop:
 
    sub c
    inc l
-   
+
    djnz div_dehl_c_loop
-   
+
    ret
 
 #endif
