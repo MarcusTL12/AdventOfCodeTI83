@@ -6,14 +6,14 @@
 ; Convert u32 in dehl to hex string located in saferam1[0:7]
 ; Destroys af, bc, de, hl, saferam1[8:11]
 hex_dehl:
-    ld (saferam1 + 8), de
-    ld (saferam1 + 10), hl
+    ld (saferam1 + 8), hl   ; saveram[8:11] = [l, h, e, d]
+    ld (saferam1 + 10), de
 
-    ld b, 4
+    ld b, 3
     ld c, 0
 
     hex_dehl_loop:
-        ld a, c                 ; d = saferam1[8 + c]
+        ld a, b                 ; d = saferam1[8 + b]
         ld hl, saferam1 + 8
         call add_a2hl
         ld d, (hl)
@@ -23,7 +23,7 @@ hex_dehl:
         rrca
         rrca
         rrca
-        and ffh
+        and 0fh
         ld hl, hex_dehl_data
         call add_a2hl
         ld e, (hl)
@@ -35,7 +35,7 @@ hex_dehl:
         ld (hl), e
 
         ld a, d                 ; e = hex_char(d & 0xff)
-        and ffh
+        and 0fh
         ld hl, hex_dehl_data
         call add_a2hl
         ld e, (hl)
@@ -48,7 +48,10 @@ hex_dehl:
         ld (hl), e
 
         inc c
-        djnz hex_dehl_loop
+        dec b
+        ld a, c
+        cp 4
+        jp nz, hex_dehl_loop
 
     ret
 
