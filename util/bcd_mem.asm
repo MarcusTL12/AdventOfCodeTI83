@@ -4,6 +4,9 @@
 #include "zero_mem.asm"
 #include "lshft_mem.asm"
 
+#include "debug/pushall.asm"
+#include "print_hex.asm"
+
 ; inputs:
 ;   hl: pointer to input
 ;   de: pointer to bcd output
@@ -12,14 +15,14 @@
 ; destroys:
 ;   zeroes integer memory
 bcd_mem:
-    ex de, hl       ; zero out bcd buffer
+    ex de, hl       ; zero out bcd buffer (and swap pointers)
     push hl
     ld a, (saferam1 + 1)
     ld b, a
     call zero_mem
     pop hl
 
-    and a ; b = 8 * saferam[0]
+    and a ; b = 8 * saferam1[0]
     ld a, (saferam1)
     rla
     rla
@@ -29,7 +32,7 @@ bcd_mem:
         ld c, b ; Store away outer loop index
 
         and a ; clear carry flag
-        ex de, hl ; Left shift integer
+        ex de, hl ; Left shift input
         push hl
         ld a, (saferam1)
         ld b, a
@@ -37,26 +40,18 @@ bcd_mem:
         pop hl
         ex de, hl
 
-        push hl ; Left shift bcd
-        ld a, (saferam1 + 1)
-        ld b, a
-        call lshft_mem
-        pop hl
-
+        push hl
         ld a, (saferam1 + 1)
         ld b, a
         bcd_mem_loop2:
-            and a ; clear carry
             ld a, (hl)
+            adc a, a
             daa
             ld (hl), a
 
             inc hl
-            jp nc, bcd_mem_carry
-            inc (hl) ; Increment next one if current carried
-
-            bcd_mem_carry:
             djnz bcd_mem_loop2
+        pop hl
 
         ld b, c
         djnz bcd_mem_loop1

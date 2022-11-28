@@ -8,10 +8,10 @@
 ; destroyed: d
 print_bcd:
     ld a, b
-    dec a
     call add_a2hl
 
     print_bcd_loop:
+        dec hl
         ld d, (hl)  ; d = *hl
 
         ld a, d     ; print((d >> 4) & 0x0f + 48)
@@ -28,7 +28,6 @@ print_bcd:
         add a, 48
         bcall(_putc)
 
-        dec hl
         djnz print_bcd_loop
 
     ret
