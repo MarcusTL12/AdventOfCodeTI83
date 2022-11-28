@@ -31,4 +31,6 @@ main:
     bcall(_getkey) ; Pause
     ret
 
-#include "input.asm"
+input:
+    #incbin "input.txt"
+    .db 0
