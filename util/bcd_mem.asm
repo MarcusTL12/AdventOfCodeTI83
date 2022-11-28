@@ -4,7 +4,6 @@
 #include "zero_mem.asm"
 #include "lshft_mem.asm"
 
-#include "debug/pushall.asm"
 #include "print_hex.asm"
 
 ; inputs:
