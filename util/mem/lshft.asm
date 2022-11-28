@@ -1,5 +1,5 @@
-#ifndef lshft_mem_inc
-#define lshft_mem_inc
+#ifndef mem_lshft_inc
+#define mem_lshft_inc
 
 ; hl: pointer to memory
 ; b: number of bytes
@@ -7,10 +7,10 @@
 ; carry flag will be set to old last bit at output
 ; destroys: hl, points to byte after mem
 ;           b = 0
-lshft_mem:
+mem_lshft:
     rl (hl)
     inc hl
-    djnz lshft_mem
+    djnz mem_lshft
     ret
 
 #endif

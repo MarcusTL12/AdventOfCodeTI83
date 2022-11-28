@@ -1,8 +1,8 @@
 #ifndef bcd_make_inc
 #define bcd_make_inc
 
-#include "../mem_zero.asm"
-#include "../lshft_mem.asm"
+#include "../mem/zero.asm"
+#include "../mem/lshft.asm"
 
 ; inputs:
 ;   hl: pointer to input
@@ -33,7 +33,7 @@ bcd_make:
         push hl
         ld a, (saferam1)
         ld b, a
-        call lshft_mem
+        call mem_lshft
         pop hl
         ex de, hl
 
