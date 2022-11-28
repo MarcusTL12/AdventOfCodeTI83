@@ -7,7 +7,7 @@
 ; inputs:
 ;   hl: pointer to input
 ;   de: pointer to bcd output
-;   saferam1[0]: number of bytes in input, max 16
+;   saferam1[0]: number of bytes in input, max 16 (Mabey 32)
 ;   saferam1[1]: number of bytes in bcd output
 ; destroys:
 ;   zeroes integer memory
