@@ -1,10 +1,8 @@
-#ifndef bcd_mem_inc
-#define bcd_mem_inc
+#ifndef bcd_make_inc
+#define bcd_make_inc
 
-#include "zero_mem.asm"
-#include "lshft_mem.asm"
-
-#include "print_hex.asm"
+#include "../mem_zero.asm"
+#include "../lshft_mem.asm"
 
 ; inputs:
 ;   hl: pointer to input
@@ -12,13 +10,13 @@
 ;   saferam1[0]: number of bytes in input, max 16 (Mabey 32)
 ;   saferam1[1]: number of bytes in bcd output
 ; destroys:
-;   zeroes integer memory
-bcd_mem:
+;   zeroes input memory
+bcd_make:
     ex de, hl       ; zero out bcd buffer (and swap pointers)
     push hl
     ld a, (saferam1 + 1)
     ld b, a
-    call zero_mem
+    call mem_zero
     pop hl
 
     and a ; b = 8 * saferam1[0]
@@ -27,7 +25,7 @@ bcd_mem:
     rla
     rla
     ld b, a
-    bcd_mem_loop1:
+    bcd_make_loop1:
         ld c, b ; Store away outer loop index
 
         and a ; clear carry flag
@@ -42,18 +40,18 @@ bcd_mem:
         push hl
         ld a, (saferam1 + 1)
         ld b, a
-        bcd_mem_loop2:
+        bcd_make_loop2:
             ld a, (hl)
             adc a, a
             daa
             ld (hl), a
 
             inc hl
-            djnz bcd_mem_loop2
+            djnz bcd_make_loop2
         pop hl
 
         ld b, c
-        djnz bcd_mem_loop1
+        djnz bcd_make_loop1
 
     ret
 

@@ -13,22 +13,22 @@ main:
     ld (saferam1), a
     inc a
     ld (saferam1 + 1), a
-    call bcd_mem
+    call bcd_make
 
     ld hl, output
     ld b, 5
-    call print_bcd
+    call bcd_print
     bcall(_newline)
 
     bcall(_getkey) ; Pause
     ret
 
 ; #include "../../util/parse_u8.asm"
-#include "../../util/print_bcd.asm"
-#include "../../util/bcd_mem.asm"
+#include "../../util/bcd/print.asm"
+#include "../../util/bcd/make.asm"
 
 input:
-    .dw 0, 0
+    .dw 58957, 47936
 
 output:
     .db 0,0,0,0,0

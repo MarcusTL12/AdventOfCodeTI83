@@ -11,7 +11,7 @@
 ; bc
 print_hex:
     ld a, b ; make hl point to byte after last byte (most significant)
-    call add_a2hl
+    add_a2hl
 
     print_hex_loop:
         dec hl
@@ -26,14 +26,14 @@ print_hex:
         rrca
         and 0fh
         ld hl, print_hex_data
-        call add_a2hl
+        add_a2hl
         ld a, (hl)
         bcall(_putc)
 
         ld a, c ; print(hex_char(a & 0xf))
         and 0fh
         ld hl, print_hex_data
-        call add_a2hl
+        add_a2hl
         ld a, (hl)
         bcall(_putc)
 

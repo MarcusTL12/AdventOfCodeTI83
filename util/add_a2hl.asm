@@ -2,14 +2,13 @@
 #define add_a2hl_inc
 
 ; Adds a to hl
-; time: 29/30 + call (= 46/47)
+; time: 29/30
 ; destroys:
 ;   a
-add_a2hl:
-    add a,l
-    ld l,a
-    jr nc, $+3
-    inc h
-    ret
+#define add_a2hl
+#defcont    add a,l
+#defcont    \ ld l,a
+#defcont    \ jr nc, $+3
+#defcont    \ inc h
 
 #endif
