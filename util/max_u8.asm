@@ -1,32 +1,32 @@
-#ifndef min_u8_inc
-#define min_u8_inc
+#ifndef max_u8_inc
+#define max_u8_inc
 
-; Find minimum byte in array
+; Find maximum byte in array
 ; input:
 ; hl: pointer to start of array
 ; b: length of array
 ; output:
-; d: index of minimum entry
-; e: value of minimum entry
+; d: index of maximum entry
+; e: value of maximum entry
 ; destroys: af, bc, de, hl, saferam1[0]
-min_u8:
+max_u8:
     xor a
     ld c, a     ; to keep current index
-    ld d, a     ; to save index of min
-    ld e, (hl)  ; to keep minimum element
+    ld d, a     ; to save index of max
+    ld e, (hl)  ; to keep maximum element
     dec b
     ret z ; return early if array contained only one entry
 
-    min_u8_loop:
+    max_u8_loop:
         inc c
         inc hl
         ld a, (hl)
         cp e
-        jp nc, min_u8_skip_update
+        jp c, max_u8_skip_update
         ld d, c
         ld e, a
-        min_u8_skip_update:
-        djnz min_u8_loop
+        max_u8_skip_update:
+        djnz max_u8_loop
 
     ret
 

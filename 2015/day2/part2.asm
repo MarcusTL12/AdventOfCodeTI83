@@ -8,8 +8,8 @@ main:
     bcall(_homeup)
 
     ld hl, input
-    ld b, 10
-    call min_u8
+    ld b, 11
+    call max_u8
 
     push de
     ld l, d
@@ -26,7 +26,7 @@ main:
     bcall(_getkey) ; Pause
     ret
 
-#include "../../util/min_u8.asm"
+#include "../../util/max_u8.asm"
 
 input:
-    .db 3,5,2,6,4,7,1,8,9,28
+    .db 3,5,2,6,4,7,1,8,9,28,17
