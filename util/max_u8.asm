@@ -8,7 +8,7 @@
 ; output:
 ; d: index of maximum entry
 ; e: value of maximum entry
-; destroys: af, bc, de, hl, saferam1[0]
+; destroys: af, bc, de, hl
 max_u8:
     xor a
     ld c, a     ; to keep current index

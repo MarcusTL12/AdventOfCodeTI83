@@ -8,7 +8,7 @@
 ; output:
 ; d: index of minimum entry
 ; e: value of minimum entry
-; destroys: af, bc, de, hl, saferam1[0]
+; destroys: af, bc, de, hl
 min_u8:
     xor a
     ld c, a     ; to keep current index

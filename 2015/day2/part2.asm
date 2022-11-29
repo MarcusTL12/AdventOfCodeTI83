@@ -7,26 +7,45 @@ main:
     bcall(_clrscrf)
     bcall(_homeup)
 
+    #define int_a saferam1 + 2
+    #define bcd_buf saferam1 + 6
+
     ld hl, input
-    ld b, 11
-    call max_u8
+    ld de, int_a
 
-    push de
-    ld l, d
-    ld h, 0
-    bcall(_disphl)
-    bcall(_newline)
-    pop de
+    ld b, 4
+    loop1:
+    ld a, (hl)
+    ld (de), a
+    inc hl
+    inc de
+    djnz loop1
 
-    ld l, e
-    ld h, 0
-    bcall(_disphl)
+    ld hl, int_a
+    ld b, 4
+    call print_hex
     bcall(_newline)
+
+    ld hl, int_a
+    ld de, bcd_buf
+    ld b, 4
+    ld c, 5
+    call bcd_make
+
+    ld hl, bcd_buf
+    ld b, 5
+    call print_hex
 
     bcall(_getkey) ; Pause
     ret
 
-#include "../../util/max_u8.asm"
+#include "../../util/bcd/make.asm"
+; #include "../../util/bcd/print.asm"
+
+#include "../../util/print_hex.asm"
 
 input:
-    .db 3,5,2,6,4,7,1,8,9,28,17
+    .dw e64dh, bb40h
+
+; input:
+;     .db 0,0,0,0

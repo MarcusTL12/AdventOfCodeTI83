@@ -7,20 +7,25 @@
 ; inputs:
 ;   hl: pointer to input
 ;   de: pointer to bcd output
-;   saferam1[0]: number of bytes in input, max 16 (Mabey 32)
-;   saferam1[1]: number of bytes in bcd output
+;   b: number of bytes in input, max 16 (Mabey 32)
+;   c: number of bytes in bcd output
 ; destroys:
 ;   zeroes input memory
+;   saferam1[0:1]
 bcd_make:
-    ex de, hl       ; zero out bcd buffer (and swap pointers)
+    #define outlen saferam1
+    #define inplen saferam1 + 1
+
+    ld (saferam1), bc ; Save away lengths
+    ex de, hl         ; zero out bcd buffer (and swap pointers)
     push hl
-    ld a, (saferam1 + 1)
+    ld a, (outlen)
     ld b, a
     call mem_zero
     pop hl
 
     and a ; b = 8 * saferam1[0]
-    ld a, (saferam1)
+    ld a, (inplen)
     rla
     rla
     rla
@@ -31,14 +36,14 @@ bcd_make:
         and a ; clear carry flag
         ex de, hl ; Left shift input
         push hl
-        ld a, (saferam1)
+        ld a, (inplen)
         ld b, a
         call mem_lshft
         pop hl
         ex de, hl
 
         push hl
-        ld a, (saferam1 + 1)
+        ld a, (outlen)
         ld b, a
         bcd_make_loop2:
             ld a, (hl)
