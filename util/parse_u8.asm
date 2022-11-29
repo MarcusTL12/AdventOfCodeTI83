@@ -3,7 +3,9 @@
 
 #include "mul_a_10.asm"
 
+; input:
 ; hl: pointer to string stops at first non-numerical digit, max 3 digits.
+; output:
 ; a: set to number
 ; if hl points to non-numerical string, a will be set to 0
 ; destroys:
