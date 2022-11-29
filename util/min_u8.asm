@@ -1,6 +1,8 @@
 #ifndef min_u8_inc
 #define min_u8_inc
 
+#include "debug/push_all.asm"
+
 ; Find minimum byte in array
 ; input:
 ; hl: pointer to start of array
@@ -14,12 +16,12 @@ min_u8:
     ld c, a     ; to keep current index
     ld d, a     ; to save index of min
     ld e, (hl)  ; to keep minimum element
-    inc hl
     dec b
     ret z ; return early if array contained only one entry
 
     min_u8_loop:
         inc c
+        inc hl
         ld a, (hl)
         cp e
         jp nc, min_u8_skip_update
