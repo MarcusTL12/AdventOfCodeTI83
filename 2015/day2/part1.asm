@@ -8,6 +8,9 @@ title:
 main:
     bcall(_clrscrf)
     bcall(_homeup)
+    ld hl, title
+    bcall(_puts)
+    bcall(_newline)
 
     ; defining variables
     #define xyz     saferam1
