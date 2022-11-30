@@ -6,6 +6,9 @@ title:
 main:
     bcall(_clrscrf)
     bcall(_homeup)
+    ld hl, title
+    bcall(_puts)
+    bcall(_newline)
 
     ld bc, input ; bc = &input
     ld d, 0      ; d = 0
