@@ -5,8 +5,6 @@ title:
 
 #include "../../util/add_a2hl.asm"
 
-#include "../../util/debug/push_all.asm"
-
 main:
     bcall(_clrscrf)
     bcall(_homeup)
@@ -14,8 +12,8 @@ main:
     ; defining variables
     #define xyz     saferam1
     #define buf     saferam1 + 3
-    #define ans     saferam1 + 4
-    #define bcd_buf saferam1 + 8
+    #define ans     saferam1 + 5
+    #define bcd_buf saferam1 + 9
 
     ; Init ans = 0
     ld hl, 0
@@ -34,8 +32,7 @@ main:
         ; buf = x * y
         ld hl, (xyz)
         bcall(_htimesl)
-        ld a, l
-        ld (buf), a
+        ld (buf), hl
 
         ; l = x + y
         ld hl, (xyz)
@@ -43,16 +40,17 @@ main:
         add a, l
         ld l, a
 
-        ; l = l * z
+        ; hl = l * z
         ld a, (xyz + 2)
         ld h, a
         bcall(_htimesl)
 
-        ; buf = (buf + l) * 2
-        ld a, (buf)
-        add a, l
-        add a, a
-        ld (buf), a
+        ; buf = (buf + hl) * 2
+        ex de, hl
+        ld hl, (buf)
+        add hl, de
+        add hl, hl
+        ld (buf), hl
 
         ; find index of largest side length
         ld hl, xyz
@@ -85,12 +83,13 @@ main:
         ; a = buf + d * e
         ex de, hl
         bcall(_htimesl)
-        ld a, (buf)
-        add a, l
+        ld de, (buf)
+        add hl, de
+        ex de, hl
 
-        ; ans += a
+        ; ans += de
         ld hl, ans
-        call integer_add_a
+        call integer_add_de
 
         pop hl
         xor a
@@ -135,7 +134,7 @@ parse_line:
 #include "../../util/parse_u8.asm"
 #include "../../util/max_u8.asm"
 
-#include "../../util/integer/add_a.asm"
+#include "../../util/integer/add_de.asm"
 
 #include "../../util/bcd/make.asm"
 #include "../../util/bcd/print.asm"
@@ -144,9 +143,6 @@ min_two_dims_map:
     .db 1,2
     .db 0,2
     .db 0,1
-
-; input:
-;     .db "2x3x4",10,"1x1x10",10,0
 
 input:
     #incbin "input.txt"

@@ -13,7 +13,6 @@ integer_add_de:
     ld b, (hl)
     ex de, hl
     add hl, bc
-    ex af, af' ; save flags
     ex de, hl
     ld (hl), d
     dec hl
@@ -21,7 +20,6 @@ integer_add_de:
 
     inc hl
     inc hl
-    ex af, af' ; restore flags
     ret nc ; return if 16 bit addition did not carry
     jp integer_inc ; tail call
 

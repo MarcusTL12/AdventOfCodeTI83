@@ -9,7 +9,7 @@
 integer_inc:
     inc (hl)
     inc hl
-    jp c, integer_inc
+    jp z, integer_inc
     ret
 
 #endif
