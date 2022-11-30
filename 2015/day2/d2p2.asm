@@ -6,46 +6,24 @@ title:
 main:
     bcall(_clrscrf)
     bcall(_homeup)
-
-    #define int_a saferam1 + 2
-    #define bcd_buf saferam1 + 6
-
-    ld hl, input
-    ld de, int_a
-
-    ld b, 4
-    loop1:
-    ld a, (hl)
-    ld (de), a
-    inc hl
-    inc de
-    djnz loop1
-
-    ld hl, int_a
-    ld b, 4
-    call print_hex
+    ld hl, title
+    bcall(_puts)
     bcall(_newline)
 
-    ld hl, int_a
-    ld de, bcd_buf
-    ld b, 4
-    ld c, 5
-    call bcd_make
+    ld a, 187
+    ld hl, 60346
+    call mul_a_hl
 
-    ld hl, bcd_buf
-    ld b, 5
-    call print_hex
+    push af
+    bcall(_disphl)
+    bcall(_newline)
+    pop af
+
+    ld l, a
+    ld h, 0
+    bcall(_disphl)
 
     bcall(_getkey) ; Pause
     ret
 
-#include "../../util/bcd/make.asm"
-; #include "../../util/bcd/print.asm"
-
-#include "../../util/print_hex.asm"
-
-input:
-    .dw e64dh, bb40h
-
-; input:
-;     .db 0,0,0,0
+#include "../../util/mul_a_hl.asm"
