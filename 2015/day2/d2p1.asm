@@ -83,7 +83,7 @@ main:
         ld a, (hl)
         ld e, a
 
-        ; a = buf + d * e
+        ; hl = buf + d * e
         ex de, hl
         bcall(_htimesl)
         ld de, (buf)
