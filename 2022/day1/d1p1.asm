@@ -18,7 +18,7 @@ main:
     #define bcd_buf saferam1 + 12
 
     xor a ; max_elf = 0
-    ld b, 4
+    ld b, 3
     ld hl, max_elf
     call mem_set
 
@@ -27,20 +27,20 @@ main:
     main_loop:
         push hl
         xor a ; elf = 0
-        ld b, 4
+        ld b, 3
         ld hl, elf
         call mem_set
         pop hl
 
         elf_acc_loop:
             ld de, snack
-            ld b, 4
+            ld b, 3
             call integer_parse ; elf += parse(line)
             inc hl
             push hl
             ld hl, elf
             ld de, snack
-            ld b, 4
+            ld b, 3
             call integer_add
             pop hl
 
@@ -53,12 +53,12 @@ main:
         push hl
         ld hl, max_elf
         ld de, elf
-        ld b, 4
+        ld b, 3
         call integer_cmp ; check if elf > max_elf
 
         ld hl, elf
         ld de, max_elf
-        ld b, 4
+        ld b, 3
         call c, mem_copy
         pop hl
 
@@ -69,12 +69,12 @@ main:
     ; print ans
     ld hl, max_elf
     ld de, bcd_buf
-    ld b, 4
-    ld c, 5
+    ld b, 3
+    ld c, 4
     call bcd_make
 
     ld hl, bcd_buf
-    ld b, 5
+    ld b, 3
     call bcd_print
 
     bcall(_getkey) ; Pause
