@@ -10,13 +10,16 @@ main:
     bcall(_puts)
     bcall(_newline)
 
+    #define int_width 3
+    #define bcd_width 4
+
     #define snack saferam1
-    #define elf saferam1 + 3
-    #define max_elf saferam1 + 6
-    #define bcd_buf saferam1 + 9
+    #define elf saferam1 + int_width
+    #define max_elf saferam1 + int_width * 2
+    #define bcd_buf saferam1 + int_width * 3
 
     xor a ; max_elf = 0
-    ld b, 3
+    ld b, int_width
     ld hl, max_elf
     call mem_set
 
@@ -25,20 +28,20 @@ main:
     main_loop:
         push hl
         xor a ; elf = 0
-        ld b, 3
+        ld b, int_width
         ld hl, elf
         call mem_set
         pop hl
 
         elf_acc_loop:
             ld de, snack
-            ld b, 3
+            ld b, int_width
             call integer_parse ; elf += parse(line)
             inc hl ; skip newline
             push hl
             ld hl, elf
             ld de, snack
-            ld b, 3
+            ld b, int_width
             call integer_add
             pop hl
 
@@ -51,12 +54,12 @@ main:
         push hl
         ld hl, max_elf
         ld de, elf
-        ld b, 3
+        ld b, int_width
         call integer_cmp ; check if elf > max_elf
 
         ld hl, elf
         ld de, max_elf
-        ld b, 3
+        ld b, int_width
         call c, mem_copy
         pop hl
 
@@ -67,12 +70,12 @@ main:
     ; print ans
     ld hl, max_elf
     ld de, bcd_buf
-    ld b, 3
-    ld c, 4
+    ld b, int_width
+    ld c, bcd_width
     call bcd_make
 
     ld hl, bcd_buf
-    ld b, 3
+    ld b, int_width
     call bcd_print
 
     bcall(_getkey) ; Pause

@@ -3,6 +3,8 @@
 title:
    .db "2022 d1p2",0
 
+#include "../../util/add_a_hl.asm"
+
 main:
     bcall(_clrscrf)
     bcall(_homeup)
@@ -10,13 +12,17 @@ main:
     bcall(_puts)
     bcall(_newline)
 
+    #define int_width 3
+    #define bcd_width 4
+    #define n_max_elves 3
+
     #define snack saferam1
-    #define elf saferam1 + 3
-    #define max_elves saferam1 + 6
-    #define bcd_buf saferam1 + 6 + 3 * 3
+    #define elf saferam1 + int_width
+    #define max_elves saferam1 + int_width * 2
+    #define bcd_buf saferam1 + int_width * (2 + n_max_elves)
 
     xor a ; max_elf = 0
-    ld b, 3 * 3
+    ld b, n_max_elves * int_width
     ld hl, max_elves
     call mem_set
 
@@ -25,20 +31,20 @@ main:
     main_loop:
         push hl
         xor a ; elf = 0
-        ld b, 3
+        ld b, int_width
         ld hl, elf
         call mem_set
         pop hl
 
         elf_acc_loop:
             ld de, snack
-            ld b, 3
+            ld b, int_width
             call integer_parse ; elf += parse(line)
             inc hl ; skip newline
             push hl
             ld hl, elf
             ld de, snack
-            ld b, 3
+            ld b, int_width
             call integer_add
             pop hl
 
@@ -50,7 +56,7 @@ main:
         inc hl ; skip extra newline
         push hl ; keep input-pointer
 
-        ld b, 3 ; number of max elves
+        ld b, n_max_elves
         ld hl, max_elves
 
         elf_sort_loop:
@@ -58,19 +64,18 @@ main:
 
             push hl
             ld de, elf
-            ld b, 3
+            ld b, int_width
             call integer_cmp ; check if elf > max_elf
 
             ld hl, elf ; Swap if larger
             pop de
             push de
-            ld b, 3
+            ld b, int_width
             call c, mem_swap
             pop hl
 
-            inc hl ; Increment to next elf
-            inc hl
-            inc hl
+            ld a, n_max_elves
+            add_a_hl
 
             pop bc
             djnz elf_sort_loop
@@ -83,24 +88,24 @@ main:
 
     ; sum max elves
     ld hl, max_elves
-    ld de, max_elves + 3
-    ld b, 3
+    ld de, max_elves + int_width
+    ld b, int_width
     call integer_add
 
     ld hl, max_elves
-    ld de, max_elves + 6
-    ld b, 3
+    ld de, max_elves + int_width * 2
+    ld b, int_width
     call integer_add
 
     ; print ans
     ld hl, max_elves
     ld de, bcd_buf
-    ld b, 3
-    ld c, 4
+    ld b, int_width
+    ld c, bcd_width
     call bcd_make
 
     ld hl, bcd_buf
-    ld b, 3
+    ld b, int_width
     call bcd_print
 
     bcall(_getkey) ; Pause
