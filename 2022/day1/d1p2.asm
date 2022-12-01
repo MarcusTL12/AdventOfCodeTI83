@@ -29,5 +29,5 @@ main:
 #include "../../util/print_hex.asm"
 
 input:
-    .db "314159565",10
+    .db "314159565"
     .db 0

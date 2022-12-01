@@ -30,12 +30,12 @@ integer_parse:
 
     integer_parse_loop:
         ld a, (de)
-        inc de
 
         sub 48
         cp 10
         jp nc, integer_parse_loop_break ; check char is numeric
 
+        inc de
         push de
         push af ; save a
 

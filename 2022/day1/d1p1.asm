@@ -49,6 +49,7 @@ main:
             cp 10
             jp c, elf_acc_loop
 
+        inc hl
         push hl
         ld hl, max_elf
         ld de, elf
