@@ -4,12 +4,12 @@
 #include "add_a_hl.asm"
 
 ; input:
-; hl: pointer to string. Stops at first nun-numerical digit, max 5 digits.
+; hl: pointer to string. Stops at first non-numerical digit, max 5 digits.
 ; output:
 ; de: set to number (zero if non numerical)
 ; hl: first character not in number
 ; destroys:
-; bc
+; b
 parse_u16:
     ex de, hl
     ld hl, 0

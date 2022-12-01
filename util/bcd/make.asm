@@ -1,7 +1,7 @@
 #ifndef bcd_make_inc
 #define bcd_make_inc
 
-#include "../mem/zero.asm"
+#include "../mem/set.asm"
 #include "../mem/lshft.asm"
 
 ; inputs:
@@ -13,15 +13,16 @@
 ;   zeroes input memory
 ;   saferam1[0:1]
 bcd_make:
-    #define outlen saferam1
-    #define inplen saferam1 + 1
+    #define outlen saferam2
+    #define inplen saferam2 + 1
 
-    ld (saferam1), bc ; Save away lengths
-    ex de, hl         ; zero out bcd buffer (and swap pointers)
+    ld (outlen), bc ; Save away lengths
+    ex de, hl       ; zero out bcd buffer (and swap pointers)
     push hl
     ld a, (outlen)
     ld b, a
-    call mem_zero
+    xor a
+    call mem_set
     pop hl
 
     and a ; b = 8 * saferam1[0]
