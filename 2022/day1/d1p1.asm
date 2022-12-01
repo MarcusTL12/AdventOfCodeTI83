@@ -3,8 +3,6 @@
 title:
    .db "2022 d1p1",0
 
-#include "../../util/debug/push_all.asm"
-
 main:
     bcall(_clrscrf)
     bcall(_homeup)
@@ -36,7 +34,7 @@ main:
             ld de, snack
             ld b, 3
             call integer_parse ; elf += parse(line)
-            inc hl
+            inc hl ; skip newline
             push hl
             ld hl, elf
             ld de, snack
@@ -49,7 +47,7 @@ main:
             cp 10
             jp c, elf_acc_loop
 
-        inc hl
+        inc hl ; skip extra newline
         push hl
         ld hl, max_elf
         ld de, elf
