@@ -13,9 +13,9 @@ main:
     bcall(_newline)
 
     #define snack saferam1
-    #define elf saferam1 + 4
-    #define max_elf saferam1 + 8
-    #define bcd_buf saferam1 + 12
+    #define elf saferam1 + 3
+    #define max_elf saferam1 + 6
+    #define bcd_buf saferam1 + 9
 
     xor a ; max_elf = 0
     ld b, 3
