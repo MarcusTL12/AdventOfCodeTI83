@@ -1,4 +1,4 @@
-Partially sorted search table:
+Partially sorted search table (psst):
 
 #### Sorted block (n_s elements) #### #### Unsorted block (n_u elements) ####
 ------------------------------------- -----
