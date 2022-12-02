@@ -22,7 +22,7 @@ n_s = O(n)
 Search:
     binary search + linear search * P(linear search)
     O(log(n_s)) + O(n_u) * P(x in U) = O(log(n_s)) + O(n_u^2 / n) =
-    O(log(n)) + O(k^2 / 4n) = O(log(n))
+    O(log(n)) + O(k^2 / 4n)
 
 Insert:
     if x in C:
@@ -61,3 +61,11 @@ Insert:
     = O((n * log(n)^2)^(1/3))
 
     This means a doubling of n leads to roughly a 1.3x increase in cost for large n
+
+Search at insert-optimal k:
+    O(log(n) + k^2 / 4n) =
+    O(log(n) + 2^(1/3) / 4 * p^(2/3) * n^(1/3) * log(n)^(2/3)) =
+    O(log(n) + 0.315 * p^(2/3) * n^(1/3) * log(n)^(2/3)) =
+    O((n * log(n)^2)^(1/3))
+
+    Same as insert
