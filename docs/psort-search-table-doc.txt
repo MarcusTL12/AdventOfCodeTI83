@@ -69,3 +69,6 @@ Search at insert-optimal k:
     O((n * log(n)^2)^(1/3))
 
     Same as insert
+
+Delete:
+    O(n)
