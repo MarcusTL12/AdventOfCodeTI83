@@ -75,16 +75,6 @@ main:
 
 #include "../../util/div_d_e.asm"
 
-; #include "../../util/integer/cmp.asm"
-; #include "../../util/integer/add.asm"
-; #include "../../util/integer/parse.asm"
-
-; #include "../../util/mem/set.asm"
-; #include "../../util/mem/copy.asm"
-
-; #include "../../util/bcd/make.asm"
-; #include "../../util/bcd/print.asm"
-
 input:
     #incbin "input"
     .db 0

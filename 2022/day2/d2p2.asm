@@ -1,7 +1,7 @@
 #include "../../header.asm"
 
 title:
-   .db "2022 d2p2",0
+    .db "2022 d2p2",0
 
 #include "../../util/add_a_hl.asm"
 
@@ -12,116 +12,65 @@ main:
     bcall(_puts)
     bcall(_newline)
 
-    #define int_width 3
-    #define bcd_width 4
-    #define n_max_elves 3
-
-    #define snack saferam1
-    #define elf saferam1 + int_width
-    #define max_elves saferam1 + int_width * 2
-    #define bcd_buf saferam1 + int_width * (2 + n_max_elves)
-
-    xor a ; max_elf = 0
-    ld b, n_max_elves * int_width
-    ld hl, max_elves
-    call mem_set
-
+    ld de, 0 ; ans = 0
     ld hl, input
-
-    main_loop:
-        push hl
-        xor a ; elf = 0
-        ld b, int_width
-        ld hl, elf
-        call mem_set
-        pop hl
-
-        elf_acc_loop:
-            ld de, snack
-            ld b, int_width
-            call integer_parse ; elf += parse(line)
-            inc hl ; skip newline
-            push hl
-            ld hl, elf
-            ld de, snack
-            ld b, int_width
-            call integer_add
-            pop hl
-
-            ld a, (hl) ; if next character is not numeric, break
-            sub 48
-            cp 10
-            jp c, elf_acc_loop
-
-        inc hl ; skip extra newline
-        push hl ; keep input-pointer
-
-        ld b, n_max_elves
-        ld hl, max_elves
-
-        elf_sort_loop:
-            push bc
-
-            push hl
-            ld de, elf
-            ld b, int_width
-            call integer_cmp ; check if elf > max_elf
-
-            ld hl, elf ; Swap if larger
-            pop de
-            push de
-            ld b, int_width
-            call c, mem_swap
-            pop hl
-
-            ld a, n_max_elves
-            add_a_hl
-
-            pop bc
-            djnz elf_sort_loop
-
-        pop hl ; retrieve input pointer
-
+    loop1:
         ld a, (hl)
         cp 0
-        jp nz, main_loop
+        jp z, loop1_break
 
-    ; sum max elves
-    ld hl, max_elves
-    ld de, max_elves + int_width
-    ld b, int_width
-    call integer_add
+        inc hl
+        inc hl
 
-    ld hl, max_elves
-    ld de, max_elves + int_width * 2
-    ld b, int_width
-    call integer_add
+        ld c, (hl)
 
-    ; print ans
-    ld hl, max_elves
-    ld de, bcd_buf
-    ld b, int_width
-    ld c, bcd_width
-    call bcd_make
+        inc hl
+        inc hl
+        ex de, hl
+        push de
 
-    ld hl, bcd_buf
-    ld b, int_width
-    call bcd_print
+        sub 'A'
+        ld b, a
+        ld a, c
+        sub 'X'
+
+        ; now a = xyz, b = abc
+
+        ; need to calculate:
+        ; ans += a * 3 + (a + b + 2) % 3 + 1
+
+        push af
+
+        add a, b ; a = a + b + 2
+        add a, 2
+
+        ld d, a ; a = a % 3
+        ld e, 3
+        call div_d_e
+
+
+        ld b, a ; a = a + 3 * orig_a + 1
+        pop af
+        ld c, a
+        add a, a
+        add a, c
+        add a, b
+        inc a
+
+        add_a_hl
+
+        pop de
+        ex de, hl
+        jp loop1
+    loop1_break:
+
+    ex de, hl
+    bcall(_disphl)
 
     bcall(_getkey) ; Pause
     ret
 
-#include "../../util/print_hex.asm"
-
-#include "../../util/integer/cmp.asm"
-#include "../../util/integer/add.asm"
-#include "../../util/integer/parse.asm"
-
-#include "../../util/mem/set.asm"
-#include "../../util/mem/swap.asm"
-
-#include "../../util/bcd/make.asm"
-#include "../../util/bcd/print.asm"
+#include "../../util/div_d_e.asm"
 
 input:
     #incbin "input"
