@@ -4,7 +4,6 @@ title:
     .db "2022 d3p1",0
 
 #include "../../util/add_a_hl.asm"
-#include "../../util/debug/push_all.asm"
 
 main:
     bcall(_clrscrf)
@@ -118,7 +117,6 @@ main:
 #include "../../util/mem/set.asm"
 
 #include "../../util/bitset_u8.asm"
-#include "../../util/print_hex.asm"
 
 input:
     #incbin "input"
