@@ -16,8 +16,10 @@ qsort:
     ret
 
 ; input
-; hl: pointer to beginning of array
-; de: pointer to end of array
+;   hl: pointer to beginning of array
+;   de: pointer to end of array
+; output
+;   hl: pointer to pivot
 qsort_partition:
     ret
 
