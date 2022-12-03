@@ -19,7 +19,6 @@ qsort:
 ; hl: pointer to beginning of array
 ; de: pointer to end of array
 qsort_partition:
-    push hl
     ret
 
 #endif
