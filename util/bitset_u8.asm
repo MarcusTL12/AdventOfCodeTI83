@@ -29,7 +29,6 @@ bitset_u8_internal:
     add a, a
     add a, a
 
-    ex de, hl
     ld hl, bitset_u8_internal_bit_instruction + 1
     or (hl)
     ld (hl), a ; Set bit number to instruction
@@ -52,17 +51,23 @@ bitset_u8_internal:
 
 ; Tests bit
 bitset_u8_bit:
-    ld (bitset_u8_internal_bit_instruction + 1), 40h + 07h
+    ex de, hl
+    ld hl, bitset_u8_internal_bit_instruction + 1
+    ld (hl), 47h
     jp bitset_u8_internal
 
 ; Set bit to 0
 bitset_u8_res:
-    ld (bitset_u8_internal_bit_instruction + 1), 80h + 07h
+    ex de, hl
+    ld hl, bitset_u8_internal_bit_instruction + 1
+    ld (hl), 87h
     jp bitset_u8_internal
 
 ; Set bit to 1
 bitset_u8_set:
-    ld (bitset_u8_internal_bit_instruction + 1), C0h + 07h
+    ex de, hl
+    ld hl, bitset_u8_internal_bit_instruction + 1
+    ld (hl), C7h
     call bitset_u8_internal
     ld (hl), a
     ret
