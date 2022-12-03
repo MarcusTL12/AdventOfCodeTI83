@@ -3,6 +3,8 @@
 
 #include "add_a_hl.asm"
 
+; Bit set with 8-bit indexing, meaning max 256 bits
+
 ; Break index into byte index and sub-bit index
 ; input: a = index to bit
 ; output:
