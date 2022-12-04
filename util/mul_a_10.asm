@@ -6,12 +6,11 @@
 ;   d
 ; Time: 20 clk (+ call/ret)
 ; Space: 5 (+ call/ret)
-mul_a_10:
-    add a, a
-    ld d, a
-    add a, a
-    add a, a
-    add a, d
-    ret
+#define mul_a_10
+#defcont    add a, a
+#defcont  \ ld d, a
+#defcont  \ add a, a
+#defcont  \ add a, a
+#defcont  \ add a, d
 
 #endif

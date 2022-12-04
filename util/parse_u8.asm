@@ -29,7 +29,7 @@ parse_u8:
 
     ld c, a ; If so, b = 10 * b + a
     ld a, b
-    call mul_a_10
+    mul_a_10
     add a, c
     ld b, a
 
@@ -41,7 +41,7 @@ parse_u8:
 
     ld c, a ; If so, b = 10 * b + a
     ld a, b
-    call mul_a_10
+    mul_a_10
     add a, c
     ld b, a
 

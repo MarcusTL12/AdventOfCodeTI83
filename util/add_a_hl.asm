@@ -7,8 +7,8 @@
 ;   a
 #define add_a_hl
 #defcont    add a,l
-#defcont    \ ld l,a
-#defcont    \ jr nc, $+3
-#defcont    \ inc h
+#defcont  \ ld l,a
+#defcont  \ jr nc, $+3
+#defcont  \ inc h
 
 #endif
