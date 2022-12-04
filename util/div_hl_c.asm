@@ -4,6 +4,7 @@
 ; https://wikiti.brandonw.net/index.php?title=Z80_Routines:Math:Division
 
 ; output: hl/c -> hl, a
+; destroys: b
 div_hl_c:
    xor	a
    ld	b, 16

@@ -4,6 +4,8 @@
 #include "add_a_hl.asm"
 
 ; output: 24-bit integer in ahl
+; destroys:
+;   de
 mul_a_hl:
     push hl
     push af

@@ -1,7 +1,7 @@
 #include "../header.asm"
 
 title:
-    .db "test",0
+    .db "test2",0
 
 main:
     bcall(_clrscrf)
@@ -10,17 +10,16 @@ main:
     bcall(_puts)
     bcall(_newline)
 
-    ld hl, test_data
+    ld hl, test_data1
+    ld de, test_data2
+    ld b, 9
+    call mem_swap
+
+    ld hl, test_data1
     bcall(_puts)
     bcall(_newline)
 
-    ld a, 1
-    ld hl, test_data
-    ld de, 9
-    ld bc, test_cmp
-    call qsort
-
-    ld hl, test_data
+    ld hl, test_data2
     bcall(_puts)
     bcall(_newline)
 
@@ -34,7 +33,10 @@ test_cmp:
     cp b
     ret
 
-#include "../util/qsort.asm"
+#include "../util/mem/swap.asm"
 
-test_data:
+test_data1:
     .db "314159263",0
+
+test_data2:
+    .db "271828182",0

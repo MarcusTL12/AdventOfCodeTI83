@@ -2,7 +2,6 @@
 #define integer_parse_inc
 
 #include "../mem/set.asm"
-#include "../mem/copy.asm"
 #include "../mem/lshft.asm"
 
 #include "add.asm"
@@ -49,8 +48,10 @@ integer_parse:
 
         push hl
         ld de, integer_parse_buffer
-        ld b, c
-        call mem_copy ; copy int to buf
+        push bc
+        ld b, 0
+        ldir ; copy int to buf
+        pop bc
         pop hl
 
         push hl

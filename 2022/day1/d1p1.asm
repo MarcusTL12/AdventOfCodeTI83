@@ -59,8 +59,10 @@ main:
 
         ld hl, elf
         ld de, max_elf
-        ld b, int_width
-        call c, mem_copy
+        ld bc, int_width
+        jp nc, skip_cpy
+        ldir
+        skip_cpy:
         pop hl
 
         ld a, (hl)
@@ -88,7 +90,6 @@ main:
 #include "../../util/integer/parse.asm"
 
 #include "../../util/mem/set.asm"
-#include "../../util/mem/copy.asm"
 
 #include "../../util/bcd/make.asm"
 #include "../../util/bcd/print.asm"

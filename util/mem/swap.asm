@@ -11,14 +11,15 @@
 ; de, hl, bc
 ; a
 mem_swap:
-    ld c, (hl)
-    ld a, (de)
-    ex de, hl
-    ld (hl), c
-    ld (de), a
-    inc hl
-    inc de
+    ld c, (hl)    ; 7, 1
+    ld a, (de)    ; 7, 1
+    ex de, hl     ; 4, 1
+    ld (hl), c    ; 7, 1
+    ld (de), a    ; 7, 1
+    inc hl        ; 6, 1
+    inc de        ; 6, 1
     djnz mem_swap
     ret
+
 
 #endif
