@@ -16,7 +16,7 @@ main:
 
     ld a, 2
     ld hl, test_data
-    ld de, 9
+    ld de, 5
     ld bc, test_cmp
     call qsort
 
