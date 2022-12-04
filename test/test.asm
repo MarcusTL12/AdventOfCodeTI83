@@ -14,7 +14,7 @@ main:
     bcall(_puts)
     bcall(_newline)
 
-    ld a, 1
+    ld a, 2
     ld hl, test_data
     ld de, 9
     ld bc, test_cmp
@@ -37,4 +37,4 @@ test_cmp:
 #include "../util/qsort.asm"
 
 test_data:
-    .db "314159263",0
+    .db "3141592636",0

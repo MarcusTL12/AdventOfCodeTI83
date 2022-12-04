@@ -46,13 +46,6 @@ qsort_rec:
     bcall(_cphlde)
     ret nc
 
-    push_all
-    ld hl, (array_base)
-    bcall(_puts)
-    bcall(_newline)
-    bcall(_getkey)
-    pop_all
-
     push hl
     push de
     call qsort_partition ; do partition
@@ -93,50 +86,47 @@ qsort_rec:
 ; output
 ;   hl: pointer to pivot
 qsort_partition:
-    jp qsort_partition_skip_rand
-
     push hl
     push de
 
     neg_hl
     add hl, de
-    inc hl ; hl = de - hl, length of array
+    inc hl ; hl = de - hl, length of array part
     ld (part_length), hl ; save length
     ex de, hl
-    call rand_hl ; chose pivot randomly
+    ; call rand_hl ; chose pivot randomly
+    ld hl, (part_length) ; debug
+    dec hl
+
     push hl
-    pop bc
+    pop bc ; bc = hl
 
     pop de
     pop hl
 
-    ; bc is now index of pivot
-
     push hl
     push de
-
-    push bc
-    pop hl
-    call qsort_swap ; swap pivot with last element
-
-    pop de
-    pop hl
-
-    qsort_partition_skip_rand: ; for debugging
-
-    ; Now pivot is the last element
-
-    push hl
-    push de
+    add hl, bc
     ld a, (elsize)
-    ex de, hl
     call mul_a_hl
     ld bc, (array_base)
     add hl, bc
-    ld (pivot_address), hl ; Save pivot address
-    ex de, hl
+    ld (pivot_address), hl
     pop de
     pop hl
+
+    ; (pivot_address) is now set
+
+    push hl
+    push de
+
+    ld hl, (pivot_address)
+    ; call qsort_swap ; swap pivot with last element
+
+    pop de
+    pop hl
+
+    ; Now pivot is the last element
 
     ld a, (elsize)
     call mul_a_hl ; scale by elsize
