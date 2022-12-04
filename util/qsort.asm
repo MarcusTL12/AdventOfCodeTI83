@@ -15,6 +15,7 @@
 #define elsize          saferam1 + 2
 #define part_length     saferam1 + 3
 #define pivot_address   saferam1 + 5
+#define tmp_pivot_index saferam1 + 7
 
 ; quicksort (unstable, random)
 ; input
@@ -52,16 +53,9 @@ qsort_rec:
     pop de
     pop hl
 
-    ld bc, (pivot_address)
-    ; bc is now address of the pivot element
-
     push hl
-    ld hl, (array_base)
-    neg_hl
-    add hl, bc ; hl is now index of pivot * elsize
-    ld a, (elsize)
-    ld c, a
-    call div_hl_c
+    ld bc, (tmp_pivot_index)
+    add hl, bc
     push hl
     pop bc
     pop hl
@@ -94,10 +88,7 @@ qsort_partition:
     inc hl ; hl = de - hl, length of array part
     ld (part_length), hl ; save length
     ex de, hl
-    ; call rand_hl ; chose pivot randomly
-    ld hl, (part_length) ; debug
-    dec hl
-
+    call rand_hl ; chose pivot randomly
     push hl
     pop bc ; bc = hl
 
@@ -120,8 +111,16 @@ qsort_partition:
     push hl
     push de
 
-    ld hl, (pivot_address)
-    ; call qsort_swap ; swap pivot with last element
+    ex de, hl
+    ld a, (elsize)
+    call mul_a_hl
+    ld bc, (array_base)
+    add hl, bc
+    ld de, (pivot_address)
+    ld (pivot_address), hl
+    ld a, (elsize)
+    ld b, a
+    call mem_swap ; swap pivot with last element
 
     pop de
     pop hl
@@ -137,7 +136,8 @@ qsort_partition:
     pop de ; tmp pivot = low index (as address)
 
     exx
-    ld hl, 0 ; index of tmp pivot
+    ld hl, 0
+    ld (tmp_pivot_index), hl
     exx
 
     ld bc, (part_length)
@@ -183,7 +183,8 @@ qsort_partition:
             ex de, hl
 
             exx
-            inc hl ; increment index of tmp pivot
+            ld hl, tmp_pivot_index
+            inc (hl) ; increment index of tmp pivot
             exx
 
             qsort_partition_not_swap:

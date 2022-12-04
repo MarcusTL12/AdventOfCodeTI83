@@ -7,6 +7,7 @@
 ;   de: upper limit
 ; output:
 ;   hl: random number in range [0, de)
+; destroys b
 rand_hl:
     ld b, 0
     call ionRandom
