@@ -3,8 +3,6 @@
 title:
     .db "2022 d4p1",0
 
-#include "../../util/debug/push_all.asm"
-
 main:
     bcall(_clrscrf)
     bcall(_homeup)
