@@ -8,7 +8,7 @@ title:
 
 ; Need 56 * 9 = 504 bytes of stack ram
 ; saferam2 has 531 bytes
-#define stacks saferam2
+; #define stacks saferam2
 #define stack_cap 56
 
 #define nstacks saferam1
@@ -22,6 +22,10 @@ main:
     bcall(_homeup)
     ld hl, title
     bcall(_puts)
+    bcall(_newline)
+
+    ld hl, stacks
+    bcall(_disphl)
     bcall(_newline)
 
     ld hl, input
@@ -62,8 +66,8 @@ main:
             ; push to stack
             ex de, hl
 
-            ld h, c
-            ld l, stack_cap
+            ld h, stack_cap
+            ld l, c
             push de
             push bc
             bcall(_htimesl)
@@ -72,6 +76,12 @@ main:
             pop bc
             pop de
             ; hl now points to bottom of stack
+
+            push_all
+            bcall(_disphl)
+            bcall(_newline)
+            bcall(_getkey)
+            pop_all
 
             ld a, c
             ld (parse_stack_line_ix_offset1 + 2), a
@@ -82,6 +92,12 @@ main:
             inc (ix) ; placeholder. offset set above at runtime
 
             ; a is now current stack size, and stacksize increased
+
+            ; push_all
+            ; ld l, a
+            ; ld h, 0
+            ; bcall(_disphl)
+            ; pop_all
 
             add_a_hl ; hl now points to empty slot on top of stack
             ld a, (de)
@@ -102,6 +118,15 @@ main:
     add a, a
     add_a_hl
     ; now hl points to beginning of move section in input
+
+    push_all
+    bcall(_newline)
+    pop_all
+
+    call print_stacks
+
+    bcall(_getkey) ; Pause
+    ret
 
     ; but first we have to reverse the stacks
     push hl ; keep next input section for later
@@ -270,11 +295,41 @@ main:
     bcall(_getkey) ; Pause
     ret
 
+print_stacks:
+    ld hl, stacks
+    ld de, stack_sizes
+
+    ld a, (nstacks)
+    ld b, a
+    print_stacks_loop1:
+        push bc
+        push hl
+
+        ld a, (de)
+        ld b, a
+        call print_str_len
+
+        pop hl
+        inc de
+        ld a, (stack_cap)
+        add_a_hl
+        pop bc
+        push_all
+        bcall(_newline)
+        pop_all
+        djnz print_stacks_loop1
+
+    ret
+
 #include "../../util/mem/set.asm"
 #include "../../util/mem/reverse.asm"
 
 #include "../../util/parse_u8.asm"
 #include "../../util/print_hex.asm"
+#include "../../util/print_str_len.asm"
+
+stacks:
+    .block 9 * stack_cap
 
 input:
     #incbin "ex1"

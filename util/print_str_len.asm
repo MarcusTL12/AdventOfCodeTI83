@@ -4,7 +4,7 @@
 ; print string of given length
 ; hl: pointer to string
 ; b: length of string
-; destroys a
+; destroys a, b, hl
 print_str_len:
     ld a, (hl)
     bcall(_putc)
