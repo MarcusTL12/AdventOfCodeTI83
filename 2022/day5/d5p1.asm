@@ -3,12 +3,11 @@
 title:
     .db "2022 d5p1",0
 
-#include "../../util/debug/push_all.asm"
 #include "../../util/add_a_hl.asm"
 
 ; Need 56 * 9 = 504 bytes of stack ram
 ; saferam2 has 531 bytes
-; #define stacks saferam2
+#define stacks saferam2
 #define stack_cap 56
 
 #define nstacks saferam1
@@ -256,41 +255,12 @@ main:
     bcall(_getkey) ; Pause
     ret
 
-print_stacks:
-    ld hl, stacks
-    ld de, stack_sizes
-
-    ld a, (nstacks)
-    ld b, a
-    print_stacks_loop1:
-        push bc
-        push hl
-
-        ld a, (de)
-        ld b, a
-        call print_str_len
-
-        pop hl
-        inc de
-        ld a, stack_cap
-        add_a_hl
-        pop bc
-        push_all
-        bcall(_newline)
-        pop_all
-        djnz print_stacks_loop1
-
-    ret
-
 #include "../../util/mem/set.asm"
 #include "../../util/mem/reverse.asm"
 
 #include "../../util/parse_u8.asm"
 #include "../../util/print_hex.asm"
 #include "../../util/print_str_len.asm"
-
-stacks:
-    .block 9 * stack_cap
 
 input:
     #incbin "input"
