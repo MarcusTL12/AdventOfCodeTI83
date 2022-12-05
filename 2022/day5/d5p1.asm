@@ -103,14 +103,6 @@ main:
     add_a_hl
     ; now hl points to beginning of move section in input
 
-    push_all
-    bcall(_newline)
-    pop_all
-
-    push_all
-    call print_stacks
-    pop_all
-
     ; but first we have to reverse the stacks
     push hl ; keep next input section for later
 
@@ -145,26 +137,6 @@ main:
     pop hl ; get next input section
 
     ; now stacks should be right order
-    push_all
-    call print_stacks
-    pop_all
-
-    push_all
-    ld a, (nstacks)
-    ld b, a
-    ld hl, stack_sizes
-    call print_hex
-    bcall(_newline)
-    pop_all
-
-    push_all
-    ld b, 18
-    call print_str_len
-    bcall(_newline)
-    pop_all
-
-    ; bcall(_getkey) ; Pause
-    ; ret
 
     loop_crane:
         ld a, (hl)
@@ -179,29 +151,14 @@ main:
         ld a, 6
         add_a_hl
         call parse_u8
+        dec a
         ld (move_from), a
 
         ld a, 4
         add_a_hl
         call parse_u8
+        dec a
         ld (move_to), a
-
-        push_all
-        ld a, (move_amt)
-        ld l, a
-        ld h, 0
-        bcall(_disphl)
-        ld a, (move_from)
-        ld l, a
-        ld h, 0
-        bcall(_disphl)
-        ld a, (move_to)
-        ld l, a
-        ld h, 0
-        bcall(_disphl)
-        bcall(_newline)
-        bcall(_getkey)
-        pop_all
 
         inc hl
         push hl ; save start of next line
@@ -214,9 +171,9 @@ main:
         ; hl now points to bottom of destination stack
 
         ld a, (move_to)
-        dec a
         ld (crane_ix_offset1 + 2), a
         ld (crane_ix_offset4 + 2), a
+        ld (crane_ix_offset4 + 5), a
         crane_ix_offset1:
         ld a, (ix) ; offset set above
         add_a_hl
@@ -235,6 +192,7 @@ main:
         ld a, (move_from)
         ld (crane_ix_offset2 + 2), a
         ld (crane_ix_offset3 + 2), a
+        ld (crane_ix_offset3 + 5), a
         crane_ix_offset2:
         ld a, (ix) ; offset set above
         add_a_hl
@@ -246,22 +204,17 @@ main:
 
         ld a, (move_amt)
         ld b, a ; so don't have to load from mem twice
+        neg
         crane_ix_offset3: ; subtract from source stack
         add a, (ix)
         ld (ix), a
-        neg
+
+        ld a, b
         crane_ix_offset4: ; add to dest stack
-        sub (ix) ; offset set above
+        add a, (ix) ; offset set above
+        ld (ix), a
 
         ; now stack sizes have been updated
-        push_all
-        ld a, (nstacks)
-        ld b, a
-        ld hl, stack_sizes
-        call print_hex
-        bcall(_newline)
-        bcall(_getkey)
-        pop_all
 
         ; move stack elements
         ld a, (move_amt)
@@ -278,14 +231,6 @@ main:
     loop_crane_break:
 
     ; now stacks have been moved around
-
-    push_all
-    ld a, (nstacks)
-    ld b, a
-    ld hl, stack_sizes
-    call print_hex
-    bcall(_newline)
-    pop_all
 
     ld hl, stacks
     ld de, stack_sizes
@@ -348,5 +293,5 @@ stacks:
     .block 9 * stack_cap
 
 input:
-    #incbin "ex1"
+    #incbin "input"
     .db 0
