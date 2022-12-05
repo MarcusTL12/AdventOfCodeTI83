@@ -10,10 +10,10 @@ main:
     bcall(_puts)
     bcall(_newline)
 
-    ld h, -1
-    ld l, 14
-    bcall(_htimesl)
-    bcall(_disphl)
+    ld ix, test_data
 
     bcall(_getkey) ; Pause
     ret
+
+test_data:
+    .db "ABC"
