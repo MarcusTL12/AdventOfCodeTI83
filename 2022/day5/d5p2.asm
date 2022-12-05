@@ -1,7 +1,7 @@
 #include "../../header.asm"
 
 title:
-    .db "2022 d5p1",0
+    .db "2022 d5p2",0
 
 #include "../../util/add_a_hl.asm"
 
@@ -217,13 +217,11 @@ main:
 
         ; move stack elements
         ld a, (move_amt)
-        ld b, a
-        loop_crane_loop1:
-            dec hl
-            ld a, (hl)
-            ld (de), a
-            inc de
-            djnz loop_crane_loop1
+        ld c, a
+        ld b, 0
+        or a ; clear carry flag
+        sbc hl, bc ; hl now points to bottom of to-be-moved stack
+        ldir
 
         pop hl ; get start of next line
         jp loop_crane
