@@ -3,7 +3,6 @@
 title:
     .db "2022 d4p2",0
 
-#include "../../util/debug/push_all.asm"
 #include "../../util/add_a_hl.asm"
 
 main:

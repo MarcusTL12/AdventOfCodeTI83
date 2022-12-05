@@ -28,9 +28,9 @@
 ;   de: pointer to element b
 ;   compares a - b
 ;   output: zero flag set if equal, carry flag set if b > a
-;   expected to destroy all registers, but not saferam[0:6]
+;   expected to destroy all registers, but not saferam1[0:6]
 ; destroys all registers
-; and saferam[0:6]
+; and saferam1[0:6]
 qsort:
     ld (elsize), a ; save elsize
     ld (array_base), hl ; save array_base
