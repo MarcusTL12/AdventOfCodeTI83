@@ -6,6 +6,8 @@
 
 #include "add_a_hl.asm"
 
+#include "mem/swap.asm"
+
 ; selection sort
 ; input:
 ;   a: size of element
@@ -35,10 +37,10 @@ ssort:
             push bc
             push hl
 
-            ; find max remaining element
+            ; find min remaining element
 
             push hl
-            pop de ; de points to current max
+            pop de ; de points to current min
 
             ld bc, (rem_len)
             inc b
@@ -47,7 +49,24 @@ ssort:
                 ld b, c
                 ld c, a
                 ssort_loop4:
-                    ; todo: compare
+                    push bc
+                    push hl
+                    push de
+                    ssort_compare_call:
+                    call 0 ; address of compare function will be set above
+                    pop de
+                    pop hl
+                    pop bc
+
+                    jp nc, ssort_not_update_min
+
+                    push hl
+                    pop de ; update min to current element
+
+                    ssort_not_update_min:
+
+                    ld a, (elsize)
+                    add_a_hl
                     djnz ssort_loop4
                 ld a, b
                 ld b, c
@@ -56,7 +75,13 @@ ssort:
 
             pop hl
 
-            ; TODO: do swap
+            push hl
+            push de
+            ld a, (elsize)
+            ld b, a
+            call mem_swap ; do swap
+            pop de
+            pop hl
 
             ld a, (elsize)
             add_a_hl            ; make hl point to next unsorted element
