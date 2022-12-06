@@ -1,6 +1,9 @@
 #ifndef psst_inc
 #define psst_inc
 
+#include "add_a_hl.asm"
+#include "mul_a_hl.asm"
+
 ; Partially Sorted Search Table (psst)
 
 ; Internal structure offsets
@@ -48,7 +51,27 @@ psst_init:
 psst_binary_search:
     ret
 
+; input:
+;   hl: pointer to psst
+; output:
+;   hl: pointer to element if it's found
 psst_linear_search:
+    push hl
+    pop ix ; set to have easy access to struct parameters
+
+    ld a, psst_data
+    add_a_hl ; hl now points to start of data
+
+    ld a, (ix + psst_elsize)
+    ld e, (ix + psst_num_sorted)
+    ld d, (ix + psst_num_sorted + 1)
+    ex de, hl
+    call mul_a_hl ; scale num sorted with elsize
+
+    add hl, de ; hl now points to start of unsorted data
+
+    ; TODO: load num unsorted into bc, and loop til found element.
+
     ret
 
 psst_search:
