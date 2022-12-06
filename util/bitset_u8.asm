@@ -39,7 +39,6 @@ bitset_u8_internal:
     ld c, a
     ld a, b
     add_a_hl ; Make pointer point to byte
-    ld a, (hl) ; and load byte
 
     bitset_u8_internal_bit_instruction:
     bit 0, a ; Specific instruction will be set before call
@@ -55,23 +54,21 @@ bitset_u8_internal:
 bitset_u8_bit:
     ex de, hl
     ld hl, bitset_u8_internal_bit_instruction + 1
-    ld (hl), 47h
+    ld (hl), 46h
     jp bitset_u8_internal
 
 ; Set bit to 0
 bitset_u8_res:
     ex de, hl
     ld hl, bitset_u8_internal_bit_instruction + 1
-    ld (hl), 87h
+    ld (hl), 86h
     jp bitset_u8_internal
 
 ; Set bit to 1
 bitset_u8_set:
     ex de, hl
     ld hl, bitset_u8_internal_bit_instruction + 1
-    ld (hl), C7h
-    call bitset_u8_internal
-    ld (hl), a
-    ret
+    ld (hl), C6h
+    jp bitset_u8_internal
 
 #endif
