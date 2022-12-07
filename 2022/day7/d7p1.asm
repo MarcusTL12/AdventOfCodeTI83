@@ -19,6 +19,12 @@ main:
     bcall(_puts)
     bcall(_newline)
 
+    ; ld (saferam1 + 150), ix
+
+    ld hl, heap
+    bcall(_disphl)
+    bcall(_newline)
+
     ld hl, input
     call parse_filesystem
 
@@ -55,7 +61,19 @@ cmp_buf:
 ;   cmp_buf: points to 32 bit integer to be less than or equal to
 sum_sub_n:
     push_all
-    ; todo: debug
+    push hl
+    ld a, 'A'
+    bcall(_putc)
+    bcall(_newline)
+    pop hl
+    push hl
+    bcall(_disphl)
+    bcall(_newline)
+    pop hl
+    ld b, 8
+    call print_hex
+    bcall(_newline)
+    bcall(_getkey)
     pop_all
 
     push hl
@@ -73,10 +91,29 @@ sum_sub_n:
 
     sum_sub_n_too_large:
 
+    push_all
+    ld a, 'B'
+    bcall(_putc)
+    bcall(_newline)
+    bcall(_disphl)
+    bcall(_newline)
+    bcall(_getkey)
+    pop_all
+
     ; now loop through linked list of subdirs and call this routine recusively
 
     ld a, dir_subd
     add_a_hl ; hl now points to memory address of pointer to first subdirectory
+
+    push_all
+    ld a, 'b'
+    bcall(_putc)
+    bcall(_newline)
+    ld b, 8
+    bcall(_disphl)
+    bcall(_newline)
+    bcall(_getkey)
+    pop_all
 
     ld e, (hl)
     inc hl
@@ -84,6 +121,15 @@ sum_sub_n:
     ex de, hl ; hl now holds address of first subdirectory
 
     sum_sub_n_loop:
+        push_all
+        ld a, 'C'
+        bcall(_putc)
+        bcall(_newline)
+        bcall(_disphl)
+        bcall(_newline)
+        bcall(_getkey)
+        pop_all
+
         ; check if hl is null
         xor a
         cp h
@@ -92,6 +138,16 @@ sum_sub_n:
         jp z, sum_sub_n_loop_break ; is null, break loop
 
         sum_sub_n_not_null:
+
+        push_all
+        ld a, 'D'
+        bcall(_putc)
+        bcall(_newline)
+        ld b, 8
+        call print_hex
+        bcall(_newline)
+        bcall(_getkey)
+        pop_all
 
         push hl
         call sum_sub_n ; recursive call
@@ -106,6 +162,13 @@ sum_sub_n:
 
         jp sum_sub_n_loop
     sum_sub_n_loop_break:
+
+    push_all
+    ld a, 'R'
+    bcall(_putc)
+    bcall(_newline)
+    bcall(_getkey)
+    pop_all
 
     ret
 

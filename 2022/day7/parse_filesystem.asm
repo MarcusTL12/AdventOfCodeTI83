@@ -54,6 +54,18 @@ parse_filesystem:
 parse_filesystem_rec:
     ld ix, (heap_pointer) ; Have as base pointer for new dir node
 
+    push_allx
+    ld iy, (saferam1 + 100)
+    ld a, 'P'
+    bcall(_putc)
+    bcall(_newline)
+    push ix
+    pop hl
+    bcall(_disphl)
+    bcall(_newline)
+    bcall(_getkey)
+    pop_allx
+
     push hl
     ld hl, (heap_pointer)
     ld a, sizeof_dir_struct
@@ -108,6 +120,18 @@ parse_filesystem_rec:
         push bc ; save pointer to previous subdir
         call parse_filesystem_rec ; recursively call to parse subdirectory
 
+        push_allx
+        push de
+        ld iy, (saferam1 + 100)
+        ld a, 'Q'
+        bcall(_putc)
+        bcall(_newline)
+        pop hl
+        bcall(_disphl)
+        bcall(_newline)
+        bcall(_getkey)
+        pop_allx
+
         ; Now hl points to next line after that subdirector
         ; and de points to dir node of that subdirectory
 
@@ -117,11 +141,7 @@ parse_filesystem_rec:
         cp b
         jp nz, parse_prev_not_null
         cp c
-        jp nz, parse_prev_not_null
-
-        inc a ; set a to 1. a = 1 => null, a = 0 => not null
-
-        jp parse_prev_is_null
+        jp z, parse_prev_is_null
 
         parse_prev_not_null:
 
@@ -129,22 +149,59 @@ parse_filesystem_rec:
         pop ix ; use ix for prev dir
 
         ld (ix + dir_next), e
-        ld (ix + dir_next + 1), d ; save pointer to next subdir as the next pointer in the previous subdir
+        ld (ix + dir_next + 1), d   ; save pointer to next subdir as
+                                    ; the next pointer in the previous subdir
 
         parse_prev_is_null:
+
+        push de
+        pop bc ; set prev dir
 
         pop ix ; then retrieve current dir
 
         push de
         pop bc ; Set the new directory as the previous subdirectory
 
-        cp 0
-        jp z, parse_add_subdir_size ; if not first, continue loop
+        xor a
+        cp (ix + dir_subd)
+        jp nz, parse_subd_not_null ; if not first, continue loop
+        cp (ix + dir_subd + 1)
+        jp nz, parse_subd_not_null
+
+        push_allx
+        push de
+        ld iy, (saferam1 + 100)
+        ld a, 'q'
+        bcall(_putc)
+        bcall(_newline)
+        pop hl
+        bcall(_disphl)
+        bcall(_newline)
+        bcall(_getkey)
+        pop_allx
 
         ld (ix + dir_subd), e
-        ld (ix + dir_subd + 1), d ; save pointer to first subdir, if this is the first
+        ld (ix + dir_subd + 1), d   ; save pointer to first subdir,
+                                    ; if this is the first
 
-        parse_add_subdir_size:
+        push_allx
+        push ix
+        ld iy, (saferam1 + 100)
+        ld a, 'r'
+        bcall(_putc)
+        bcall(_newline)
+        pop hl
+        push hl
+        bcall(_disphl)
+        bcall(_newline)
+        pop hl
+        ld b, 8
+        call print_hex
+        bcall(_newline)
+        bcall(_getkey)
+        pop_allx
+
+        parse_subd_not_null:
 
         push hl
         push ix
@@ -186,6 +243,23 @@ parse_filesystem_rec:
 
     push ix
     pop de ; Put pointer to dir into de as return value
+
+    push_allx
+    push de
+    ld iy, (saferam1 + 100)
+    ld a, 'p'
+    bcall(_putc)
+    bcall(_newline)
+    pop hl
+    push hl
+    bcall(_disphl)
+    bcall(_newline)
+    pop hl
+    ld b, 8
+    call print_hex
+    bcall(_newline)
+    bcall(_getkey)
+    pop_allx
 
     ret
 
