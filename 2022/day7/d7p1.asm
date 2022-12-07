@@ -17,20 +17,14 @@ main:
     call parse_filesystem
 
     ex de, hl
+    ld de, bcd_buf
     ld b, 4
-    call print_hex
+    ld c, 5
+    call bcd_make
 
-    ; push de
-
-    ; ex de, hl
-    ; ld de, bcd_buf
-    ; ld b, 4
-    ; ld c, 5
-    ; call bcd_make
-
-    ; pop hl
-    ; ld b, 5
-    ; call bcd_print
+    ld hl, bcd_buf
+    ld b, 5
+    call bcd_print
 
     bcall(_getkey) ; Pause
     ret

@@ -4,6 +4,10 @@
 #include "../../util/integer/parse.asm"
 #include "../../util/integer/add.asm"
 
+; #include "../../util/debug/push_all.asm"
+; #include "../../util/print_str_len.asm"
+; #include "../../util/print_hex.asm"
+
 ; Here the "heap" is the chunck of memory all the directory data will
 ; be stored. It behaves like a vec. It will add the next element to
 ; the end. The elements know the addresses of other elements in the heap:
@@ -33,8 +37,17 @@
 ; input:
 ;   hl: pointer to beginning of input
 parse_filesystem:
+    ld (saferam1 + 100), iy
     ld de, heap
     ld (heap_pointer), de ; set heap pointer to start of heap
+
+    ; skip cd /
+    parse_skip_cd:
+        ld a, (hl)
+        inc hl
+        cp '\n'
+        jp nz, parse_skip_cd ; look for newline character
+
     ; implicit jump to recursive routine under
 
 ; input:
@@ -78,8 +91,7 @@ parse_filesystem_rec:
             ld a, (hl)
             inc hl
             cp '\n'
-            jp z, parse_loop1_find_next_line_break ; look for newline character
-        parse_loop1_find_next_line_break:
+            jp nz, parse_loop1_find_next_line ; look for newline character
 
         ; check if cd command
         ld a, '$'
@@ -131,17 +143,26 @@ parse_filesystem_rec:
         pop bc ; Set the new directory as the previous subdirectory
 
         cp 0
-        jp z, parse_loop1_continue ; if not first, continue loop
+        jp z, parse_add_subdir_size ; if not first, continue loop
 
         ld (ix + dir_subd), e
         ld (ix + dir_subd + 1), d ; save pointer to first subdir, if this is the first
+
+        parse_add_subdir_size:
+
+        push hl
+        push ix
+        pop hl
+        call integer_add
+        pop hl
+        jp parse_loop1
 
         parse_no_cd:
 
         ld a, (iy) ; check if first is numeric
         sub '0'
-        cp '9'
-        jp c, parse_loop1_continue ; Was not numeric, continue to next line
+        cp 10
+        jp nc, parse_loop1 ; Was not numeric, continue to next line
 
         push hl ; save pointer to next line
         push bc ; save pointer to previous subdir
@@ -163,7 +184,6 @@ parse_filesystem_rec:
         pop bc ; retrieve pointer to previous subdir
         pop hl ; retrieve pointer to next line
 
-        parse_loop1_continue:
         jp parse_loop1
     parse_loop1_break:
     pop iy
