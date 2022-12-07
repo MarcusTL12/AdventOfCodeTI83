@@ -7,7 +7,7 @@
 ; de: pointer to y
 ; b: length of integers
 integer_add:
-    xor a
+    xor a ; clear carry flag
 ; Then jumps directly to adc under
 
 ; x = x + y + CY

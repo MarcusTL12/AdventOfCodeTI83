@@ -17,7 +17,7 @@
 ; hl: pointer to string. Stops at first non-numerical digit. Will point to this at return.
 ; de: pointer to integer location.
 ; b: length of integer (max 128 (1024 bit int))
-; destroys: saferam3[0:b]
+; destroys: all registers and saferam3[0:b]
 integer_parse:
     ex de, hl
     ld c, b ; save away length of integer
