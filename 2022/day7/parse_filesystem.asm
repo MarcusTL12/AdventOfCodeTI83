@@ -4,10 +4,6 @@
 #include "../../util/integer/parse.asm"
 #include "../../util/integer/add.asm"
 
-; #include "../../util/debug/push_all.asm"
-; #include "../../util/print_str_len.asm"
-; #include "../../util/print_hex.asm"
-
 ; Here the "heap" is the chunck of memory all the directory data will
 ; be stored. It behaves like a vec. It will add the next element to
 ; the end. The elements know the addresses of other elements in the heap:
@@ -65,16 +61,16 @@ parse_filesystem_rec:
     ld (heap_pointer), hl ; Increment heap pointer to point to next free space
     pop hl
 
-    ld (ix), 0
-    ld (ix + 1), 0
-    ld (ix + 2), 0
-    ld (ix + 3), 0
+    ld (ix + dir_size), 0 ; size = zero
+    ld (ix + dir_size + 1), 0
+    ld (ix + dir_size + 2), 0
+    ld (ix + dir_size + 3), 0
 
-    ld (ix + 4), 0
-    ld (ix + 5), 0
+    ld (ix + dir_next), 0 ; next = null
+    ld (ix + dir_next + 1), 0
 
-    ld (ix + 6), 0
-    ld (ix + 7), 0
+    ld (ix + dir_subd), 0 ; subdir = null
+    ld (ix + dir_subd + 1), 0
 
     ld bc, 0 ; pointer to previous subdir, or 0 if none have been parsed yet.
 

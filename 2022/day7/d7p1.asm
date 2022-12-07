@@ -4,7 +4,13 @@ title:
     .db "2022 d7p1",0
 
 ; 5 byte bcd buffer for printing
+#define int_buf saferam1 + 2
 #define bcd_buf saferam1 + 6
+
+#include "../../util/add_a_hl.asm"
+
+#include "../../util/debug/push_all.asm"
+; #include "../../util/print_str_len.asm"
 
 main:
     bcall(_clrscrf)
@@ -16,7 +22,15 @@ main:
     ld hl, input
     call parse_filesystem
 
-    ex de, hl
+    ex de, hl ; hl now points to root node
+
+    ld de, 0
+    ld (int_buf), de
+    ld (int_buf + 2), de ; zero int_buf
+
+    call sum_sub_n ; sum up all
+
+    ld hl, int_buf
     ld de, bcd_buf
     ld b, 4
     ld c, 5
@@ -30,6 +44,73 @@ main:
     ret
 
 #include "parse_filesystem.asm"
+
+cmp_buf:
+    ; 100000 in hex is 0001_86a0
+    .dw 86a0h, 0001h
+
+; recursively adds to 32 bit integer in int_buf
+; input:
+;   hl: pointer to dir node
+;   cmp_buf: points to 32 bit integer to be less than or equal to
+sum_sub_n:
+    push_all
+    ; todo: debug
+    pop_all
+
+    push hl
+    ld de, cmp_buf
+    call integer_cmp
+    pop hl
+
+    jp c, sum_sub_n_too_large ; skip this directory's size if too large
+
+    push hl
+    ld de, int_buf
+    ld b, 4
+    call integer_add ; add contribution from current dir
+    pop hl
+
+    sum_sub_n_too_large:
+
+    ; now loop through linked list of subdirs and call this routine recusively
+
+    ld a, dir_subd
+    add_a_hl ; hl now points to memory address of pointer to first subdirectory
+
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    ex de, hl ; hl now holds address of first subdirectory
+
+    sum_sub_n_loop:
+        ; check if hl is null
+        xor a
+        cp h
+        jp nz, sum_sub_n_not_null
+        cp l
+        jp z, sum_sub_n_loop_break ; is null, break loop
+
+        sum_sub_n_not_null:
+
+        push hl
+        call sum_sub_n ; recursive call
+        pop hl
+
+        ld a, dir_next
+        add_a_hl
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        ex de, hl
+
+        jp sum_sub_n_loop
+    sum_sub_n_loop_break:
+
+    ret
+
+#include "../../util/integer/add.asm"
+#include "../../util/integer/cmp.asm"
 
 #include "../../util/bcd/make.asm"
 #include "../../util/bcd/print.asm"
