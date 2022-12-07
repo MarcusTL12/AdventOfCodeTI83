@@ -8,7 +8,8 @@
 ; be stored. It behaves like a vec. It will add the next element to
 ; the end. The elements know the addresses of other elements in the heap:
 ; A dir contains a pointer to the next dir in its dir
-; and a pointer to its first subdir
+; and a boolean for whether it has subdirs. Its first subdir is next
+; on the heap
 
 ; Might not be enough space here
 ; #define heap saferam2
@@ -24,11 +25,11 @@
 #define dir_size 0
 ; pointer to next dir in same directory as this dir. Is 0 if last.
 #define dir_next 4
-; pointer to first subdirectory (it will have a pointer to the next one)
+; 1 if has subdirs, 0 if not
 #define dir_subd 6
 
 ; Total size of directory struct
-#define sizeof_dir_struct 4 + 2 + 2
+#define sizeof_dir_struct 4 + 2 + 1
 
 ; input:
 ;   hl: pointer to beginning of input
@@ -81,8 +82,7 @@ parse_filesystem_rec:
     ld (ix + dir_next), 0 ; next = null
     ld (ix + dir_next + 1), 0
 
-    ld (ix + dir_subd), 0 ; subdir = null
-    ld (ix + dir_subd + 1), 0
+    ld (ix + dir_subd), 0 ; start with no subdir
 
     ld bc, 0 ; pointer to previous subdir, or 0 if none have been parsed yet.
 
@@ -180,9 +180,7 @@ parse_filesystem_rec:
         bcall(_getkey)
         pop_allx
 
-        ld (ix + dir_subd), e
-        ld (ix + dir_subd + 1), d   ; save pointer to first subdir,
-                                    ; if this is the first
+        ld (ix + dir_subd), 1
 
         push_allx
         push ix
@@ -195,7 +193,7 @@ parse_filesystem_rec:
         bcall(_disphl)
         bcall(_newline)
         pop hl
-        ld b, 8
+        ld b, 7
         call print_hex
         bcall(_newline)
         bcall(_getkey)
