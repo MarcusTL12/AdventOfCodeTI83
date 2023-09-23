@@ -253,7 +253,7 @@ parse_filesystem_rec:
     bcall(_disphl)
     bcall(_newline)
     pop hl
-    ld b, 8
+    ld b, 7
     call print_hex
     bcall(_newline)
     bcall(_getkey)
@@ -261,5 +261,6 @@ parse_filesystem_rec:
 
     ret
 
+; Make a 2 kiB block to store filesystem tree
 heap:
     .block 1024 * 2
