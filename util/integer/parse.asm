@@ -14,7 +14,8 @@
 #define integer_parse_buffer saferam3
 
 ; input:
-; hl: pointer to string. Stops at first non-numerical digit. Will point to this at return.
+; hl: pointer to string. Stops at first non-numerical digit.
+;       Will point to this at return.
 ; de: pointer to integer location.
 ; b: length of integer (max 128 (1024 bit int))
 ; destroys: all registers and saferam3[0:b]
