@@ -1,7 +1,7 @@
 #include "../../header.asm"
 
 title:
-   .db "2019 d1p1",0
+   .db "2019 d1p2",0
 
 main:
     bcall(_clrscrf)
@@ -12,12 +12,13 @@ main:
 
     ; constants
     #define N 3
-    #define M 4
+    #define BCD_N 4
 
     ; variables
     #define x           saferam1
     #define ans         x           + N
     #define bcd_buf     ans         + N
+    #define buf         bcd_buf     + BCD_N
 
     ld hl, ans
     ld b, N
@@ -33,20 +34,29 @@ main:
 
         push hl ; save line pointer
 
-        ld hl, x
-        ld a, 3
-        ld b, N
-        call integer_divrem_a
+        jp loop2_start
 
-        ld hl, x
-        ld a, 2
-        ld b, N
-        call integer_sub_a
+        loop2:
+            ld hl, ans
+            ld de, x
+            ld b, N
+            call integer_add
 
-        ld hl, ans
-        ld de, x
-        ld b, N
-        call integer_add
+        loop2_start:
+            ld hl, x
+            ld a, 3
+            ld b, N
+            call integer_divrem_a
+
+            ld hl, x
+            ld a, 2
+            ld b, N
+            call integer_sub_a
+
+            ld hl, x
+            ld b, N
+            call integer_is_neg
+            jp p, loop2
 
         pop hl ; get line pointer
 
@@ -57,11 +67,11 @@ main:
     ld hl, ans
     ld de, bcd_buf
     ld b, N
-    ld c, M
+    ld c, BCD_N
     call bcd_make
 
     ld hl, bcd_buf
-    ld b, M
+    ld b, BCD_N
     call bcd_print
     bcall(_newline)
 
@@ -73,6 +83,7 @@ main:
 #include "../../util/integer/divrem_a.asm"
 #include "../../util/integer/sub_a.asm"
 #include "../../util/integer/add.asm"
+#include "../../util/integer/is_neg.asm"
 
 #include "../../util/bcd/make.asm"
 #include "../../util/bcd/print.asm"
