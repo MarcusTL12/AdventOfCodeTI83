@@ -1,8 +1,10 @@
 #ifndef ssort_inc
 #define ssort_inc
 
-#define elsize saferam1
-#define rem_len saferam1 + 1
+ssort_ssort_elsize:
+    .db 0
+ssort_ssort_rem_len:
+    .dw 0
 
 #include "add_a_hl.asm"
 
@@ -22,11 +24,11 @@
 ;           expected to destroy all registers, but not saferam1[0:6]
 ; destroys all registers
 ssort:
-    ld (elsize), a
+    ld (ssort_elsize), a
     ld (ssort_compare_call + 1), bc
 
-    ld (rem_len), de
-    ld bc, (rem_len)
+    ld (ssort_rem_len), de
+    ld bc, (ssort_rem_len)
 
     inc b ; for looping correctly
     ssort_loop1:
@@ -42,7 +44,7 @@ ssort:
             push hl
             pop de ; de points to current min
 
-            ld bc, (rem_len)
+            ld bc, (ssort_rem_len)
             inc b
             ssort_loop3:
                 ld a, b
@@ -65,7 +67,7 @@ ssort:
 
                     ssort_not_update_min:
 
-                    ld a, (elsize)
+                    ld a, (ssort_elsize)
                     add_a_hl
                     djnz ssort_loop4
                 ld a, b
@@ -77,19 +79,19 @@ ssort:
 
             push hl
             push de
-            ld a, (elsize)
+            ld a, (ssort_elsize)
             ld b, a
             call mem_swap ; do swap
             pop de
             pop hl
 
-            ld a, (elsize)
+            ld a, (ssort_elsize)
             add_a_hl            ; make hl point to next unsorted element
 
             push hl
-            ld hl, (rem_len)
+            ld hl, (ssort_rem_len)
             dec hl              ; and decrement remaining length
-            ld (rem_len), hl
+            ld (ssort_rem_len), hl
             pop hl
 
             pop bc
@@ -99,7 +101,6 @@ ssort:
         ld b, c
         ld c, a
         djnz ssort_loop1
-
 
     ret
 

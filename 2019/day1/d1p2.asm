@@ -18,7 +18,6 @@ main:
     #define x           saferam1
     #define ans         x           + N
     #define bcd_buf     ans         + N
-    #define buf         bcd_buf     + BCD_N
 
     ld hl, ans
     ld b, N
