@@ -1,9 +1,9 @@
 #ifndef ssort_inc
 #define ssort_inc
 
-ssort_ssort_elsize:
+ssort_elsize:
     .db 0
-ssort_ssort_rem_len:
+ssort_rem_len:
     .dw 0
 
 #include "add_a_hl.asm"

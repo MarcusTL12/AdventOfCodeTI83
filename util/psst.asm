@@ -231,7 +231,7 @@ psst_linear_search:
     pop de ; {1} get pointer to reference element
 
     ; load num unsorted into b, and loop til found element.
-    ld b, (ix, psst_num_unsorted)
+    ld b, (ix + psst_num_unsorted)
     ld a, (ix + psst_elsize)
 
     psst_linear_search_loop:
@@ -241,7 +241,7 @@ psst_linear_search:
         call 0
         pop de
         pop hl
-        jp z psst_linear_search_found
+        jp z, psst_linear_search_found
 
         add_a_hl ; make hl point to next element
         djnz psst_linear_search_loop
