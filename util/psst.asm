@@ -279,7 +279,23 @@ psst_search:
 ; input:
 ;   hl: pointer to psst
 psst_sort:
-    ret
+    push hl
+    pop ix
+
+    ld de, psst_data
+    add hl, de ; make hl point to data
+
+    ex de, hl
+
+    ld l, (ix + psst_num_sorted)
+    ld h, (ix + psst_num_sorted + 1)
+    ld a, (ix + psst_num_unsorted)
+    add_a_hl
+    ex de, hl ; de is now total length and hl is data
+
+    ld a, (ix + psst_elsize)
+
+    jp ssort ; tail call (change to qsort)
 
 ; input:
 ;   hl: pointer to psst
