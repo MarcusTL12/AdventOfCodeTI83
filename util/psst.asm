@@ -276,7 +276,55 @@ psst_search:
     pop de
     ret
 
+; input:
+;   hl: pointer to psst
+psst_sort:
+    ret
+
+; input:
+;   hl: pointer to psst
+;   de: pointer to element to insert
+; Will look for element in psst.
+; If it is found it is overwritten with the new element.
+; If it is not found, a the new element is added to the end of the
+; unsorted section. If the size of the unsorted section then becomes too
+; large, the psst is sorted.
 psst_insert:
+    push hl ; {0} p_psst
+    push de ; {1} p_el
+    call psst_search
+
+    ; Save carry flag for return
+    push af
+    pop de
+    ld (psst_binary_search_tmp_storage), de
+
+    pop de ; {1} p_el
+    pop ix ; {0} p_psst
+
+    ; Copy to hl
+    ex de, hl
+    ld b, 0
+    ld c, (ix)
+    ldir
+
+    ; Load carry flag
+    ld de, (psst_binary_search_tmp_storage)
+    push de
+    pop af
+
+    ret nc ; return if not inserted
+
+    ; If inserted, increase count
+    inc (ix + psst_num_unsorted)
+    jp z, psst_sort ; tail call sort if overflow
+
+    ; Check for soft overflow
+    or a ; clear carry
+    ld a, (ix + psst_max_unsorted)
+    sbc a, (ix + psst_num_unsorted)
+    jp z, psst_sort ; tail call sort if overflow
+
     ret
 
 #endif
