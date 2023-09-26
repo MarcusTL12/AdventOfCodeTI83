@@ -254,7 +254,26 @@ psst_linear_search:
     or a
     ret
 
+; input:
+;   hl: pointer to psst
+;   de: pointer to reference element
+; output:
+;   hl: pointer to element if it's found,
+;       or to the next free space if not
+;   carry flag set if not found
 psst_search:
+    push hl
+    push de
+    call psst_binary_search
+    jp nc, psst_search_binary_search_found
+    pop de
+    pop hl
+
+    jp psst_linear_search ; tail call
+
+    psst_search_binary_search_found:
+    pop de
+    pop de
     ret
 
 psst_insert:
