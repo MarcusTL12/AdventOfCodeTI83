@@ -12,29 +12,9 @@ main:
 
     ld hl, test_data
     bcall(_puts)
-    bcall(_newline)
-
-    ld a, 2
-    ld hl, test_data
-    ld de, 5
-    ld bc, test_cmp
-    call ssort
-
-    ld hl, test_data
-    bcall(_puts)
-    bcall(_newline)
 
     bcall(_getkey) ; Pause
     ret
 
-test_cmp:
-    ex de, hl
-    ld a, (de)
-    ld b, (hl)
-    cp b
-    ret
-
-#include "../util/ssort.asm"
-
 test_data:
-    .db "yrokpstylc",0
+    .db "AB$C",0

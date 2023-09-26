@@ -10,12 +10,15 @@ main:
     bcall(_puts)
     bcall(_newline)
 
-    
+
 
     bcall(_getkey) ; Pause
     ret
 
 #include "../util/psst.asm"
+
+test_psst_mem:
+    .fill 50
 
 test_data:
     .db "yrokpstylc",0
