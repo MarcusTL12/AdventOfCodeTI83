@@ -20,7 +20,7 @@
 #define psst_cmp_fn_ptr 5
 #define psst_data 7
 
-#define psst_init_unsorted_cap 4
+#define psst_init_unsorted_cap 8
 
 ; Initializes the a psst. This is pretty inoptimal to be flexible,
 ; but it's only run once per psst, so it's fine.
@@ -33,7 +33,7 @@
 ;           de: pointer to element b
 ;           compares a - b
 ;           output: zero flag set if equal, carry flag set if b > a
-;           expected to destroy all registers, but not saferam1[0:6]
+;           expected to destroy all registers
 psst_init:
     push hl
     pop ix
@@ -268,12 +268,12 @@ psst_linear_search:
 ;       or to the next free space if not
 ;   carry flag set if not found
 psst_search:
-    push hl
-    push de
-    call psst_binary_search
-    jp nc, psst_search_binary_search_found
-    pop de
-    pop hl
+    ; push hl
+    ; push de
+    ; call psst_binary_search
+    ; jp nc, psst_search_binary_search_found
+    ; pop de
+    ; pop hl
 
     jp psst_linear_search ; tail call
 
