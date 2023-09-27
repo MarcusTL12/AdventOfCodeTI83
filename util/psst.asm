@@ -1,7 +1,7 @@
 #ifndef psst_inc
 #define psst_inc
 
-#include "add_a_hl.asm"
+#include "add_hl_a.asm"
 #include "mul_a_hl.asm"
 #include "div_hl_2.asm"
 
@@ -69,7 +69,7 @@ psst_binary_search:
     ld (psst_binary_search_cmp_call + 1), de
 
     ld a, psst_data
-    add_a_hl ; hl now points to start of data
+    add_hl_a ; hl now points to start of data
     push hl
     pop iy ; iy now points to start of data
 
@@ -216,7 +216,7 @@ psst_linear_search:
     ld (psst_linear_search_cmp_call + 1), de
 
     ld a, psst_data
-    add_a_hl ; hl now points to start of data
+    add_hl_a ; hl now points to start of data
     push hl ; {2} save start of data
 
     ld a, (ix + psst_elsize)
@@ -243,7 +243,7 @@ psst_linear_search:
         pop hl
         jp z, psst_linear_search_found
 
-        add_a_hl ; make hl point to next element
+        add_hl_a ; make hl point to next element
         djnz psst_linear_search_loop
 
     scf ; did not find, set carry flag
@@ -290,7 +290,7 @@ psst_sort:
     ld l, (ix + psst_num_sorted)
     ld h, (ix + psst_num_sorted + 1)
     ld a, (ix + psst_num_unsorted)
-    add_a_hl
+    add_hl_a
     ex de, hl ; de is now total length and hl is data
 
     ld a, (ix + psst_elsize)
@@ -341,6 +341,27 @@ psst_insert:
     sbc a, (ix + psst_num_unsorted)
     jp z, psst_sort ; tail call sort if overflow
 
+    ret
+
+; input:
+;   hl: pointer to psst
+; output:
+;   hl: number of elements in psst
+; time: 7 * 5 + 6 * 3 + 4 + 20 + 11 = 88
+; destroys:
+;   bc, de, af
+psst_len:
+    ld a, psst_num_sorted   ; 7
+    add_hl_a                ; 20
+    ld e, (hl)              ; 7
+    inc hl                  ; 6
+    ld d, (hl)              ; 7
+    inc hl                  ; 6
+    ld c, (hl)              ; 7
+    inc hl                  ; 6
+    ld b, (hl)              ; 7
+    ex de, hl               ; 4
+    add hl, bc              ; 11
     ret
 
 #endif

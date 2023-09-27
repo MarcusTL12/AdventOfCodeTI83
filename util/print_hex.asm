@@ -1,7 +1,7 @@
 #ifndef print_hex_inc
 #define print_hex_inc
 
-#include "add_a_hl.asm"
+#include "add_hl_a.asm"
 
 ; Print memory location as hexadecimal
 ; hl: pointer to memory
@@ -11,7 +11,7 @@
 ; bc
 print_hex:
     ld a, b ; make hl point to byte after last byte (most significant)
-    add_a_hl
+    add_hl_a
 
     print_hex_loop:
         dec hl
@@ -26,14 +26,14 @@ print_hex:
         rrca
         and 0fh
         ld hl, print_hex_data
-        add_a_hl
+        add_hl_a
         ld a, (hl)
         bcall(_putc)
 
         ld a, c ; print(hex_char(a & 0xf))
         and 0fh
         ld hl, print_hex_data
-        add_a_hl
+        add_hl_a
         ld a, (hl)
         bcall(_putc)
 

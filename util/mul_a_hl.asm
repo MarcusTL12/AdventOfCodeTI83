@@ -1,7 +1,7 @@
 #ifndef mul_a_hl_inc
 #define mul_a_hl_inc
 
-#include "add_a_hl.asm"
+#include "add_hl_a.asm"
 
 ; output: 24-bit integer in ahl
 ; destroys:
@@ -22,7 +22,7 @@ mul_a_hl:
 
     ex de, hl
     ld a, d
-    add_a_hl
+    add_hl_a
 
     ld a, h
     ld h, l

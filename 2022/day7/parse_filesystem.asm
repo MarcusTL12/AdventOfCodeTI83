@@ -1,5 +1,5 @@
 
-#include "../../util/add_a_hl.asm"
+#include "../../util/add_hl_a.asm"
 
 #include "../../util/integer/parse.asm"
 #include "../../util/integer/add.asm"
@@ -70,7 +70,7 @@ parse_filesystem_rec:
     push hl
     ld hl, (heap_pointer)
     ld a, sizeof_dir_struct
-    add_a_hl
+    add_hl_a
     ld (heap_pointer), hl ; Increment heap pointer to point to next free space
     pop hl
 

@@ -1,5 +1,5 @@
 
-#include "../../util/add_a_hl.asm"
+#include "../../util/add_hl_a.asm"
 
 #include "../../util/mem/set.asm"
 
@@ -67,7 +67,7 @@ solve:
 
     push hl
     ld a, (n_diff)
-    add_a_hl
+    add_hl_a
     ex de, hl ; de now points to next char to be processed
     pop hl ; and hl points to char to be dropped from sliding window
     loop_solve:

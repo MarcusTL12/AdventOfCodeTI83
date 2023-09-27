@@ -6,7 +6,7 @@ ssort_elsize:
 ssort_rem_len:
     .dw 0
 
-#include "add_a_hl.asm"
+#include "add_hl_a.asm"
 
 #include "mem/swap.asm"
 
@@ -68,7 +68,7 @@ ssort:
                     ssort_not_update_min:
 
                     ld a, (ssort_elsize)
-                    add_a_hl
+                    add_hl_a
                     djnz ssort_loop4
                 ld a, b
                 ld b, c
@@ -86,7 +86,7 @@ ssort:
             pop hl
 
             ld a, (ssort_elsize)
-            add_a_hl            ; make hl point to next unsorted element
+            add_hl_a            ; make hl point to next unsorted element
 
             push hl
             ld hl, (ssort_rem_len)

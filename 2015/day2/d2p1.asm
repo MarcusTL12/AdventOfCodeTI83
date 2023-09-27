@@ -3,7 +3,7 @@
 title:
    .db "2015 d2p1",0
 
-#include "../../util/add_a_hl.asm"
+#include "../../util/add_hl_a.asm"
 
 main:
     bcall(_clrscrf)
@@ -64,7 +64,7 @@ main:
         ld a, d
         add a, a
         ld hl, min_two_dims_map
-        add_a_hl
+        add_hl_a
         ld d, (hl)
         inc hl
         ld e, (hl)
@@ -72,14 +72,14 @@ main:
         ; d = xyz[d]
         ld hl, xyz
         ld a, d
-        add_a_hl
+        add_hl_a
         ld a, (hl)
         ld d, a
 
         ; e = xyz[e]
         ld hl, xyz
         ld a, e
-        add_a_hl
+        add_hl_a
         ld a, (hl)
         ld e, a
 

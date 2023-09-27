@@ -1,7 +1,7 @@
 #ifndef mem_reverse_inc
 #define mem_reverse_inc
 
-#include "../add_a_hl.asm"
+#include "../add_hl_a.asm"
 
 ; reverses byte order of memory
 ; input:
@@ -14,7 +14,7 @@ mem_reverse:
     push de
     pop hl
     ld a, b
-    add_a_hl
+    add_hl_a
     dec hl
     ex de, hl ; now de points to last element
 

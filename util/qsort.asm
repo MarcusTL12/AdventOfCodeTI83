@@ -3,7 +3,7 @@
 
 #include "debug/push_all.asm"
 
-#include "add_a_hl.asm"
+#include "add_hl_a.asm"
 #include "mul_a_hl.asm"
 #include "div_hl_c.asm"
 #include "neg_hl.asm"
@@ -179,7 +179,7 @@ qsort_partition:
 
             ex de, hl
             ld a, (elsize)
-            add_a_hl ; increment tmp pivot to next element
+            add_hl_a ; increment tmp pivot to next element
             ex de, hl
 
             exx
@@ -190,7 +190,7 @@ qsort_partition:
             qsort_partition_not_swap:
 
             ld a, (elsize)
-            add_a_hl ; hl points to next element
+            add_hl_a ; hl points to next element
 
             pop bc ; get looping index
             djnz qsort_partition_loop2

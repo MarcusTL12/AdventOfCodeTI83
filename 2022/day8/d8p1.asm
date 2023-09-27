@@ -5,7 +5,7 @@ title:
 
 #include "../../util/debug/push_all.asm"
 
-#include "../../util/add_a_hl.asm"
+#include "../../util/add_hl_a.asm"
 
 ; 16 bit number:
 #define inplen saferam1
@@ -127,7 +127,7 @@ main:
 
             ld a, c
             ld hl, (ans)
-            add_a_hl
+            add_hl_a
             ld (ans), hl
 
             inc e
@@ -173,7 +173,7 @@ get_tree:
     pop de
 
     ld a, e
-    add_a_hl
+    add_hl_a
 
     ld a, (hl)
 

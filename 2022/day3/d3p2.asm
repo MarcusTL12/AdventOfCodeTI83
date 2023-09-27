@@ -3,7 +3,7 @@
 title:
     .db "2022 d3p2",0
 
-#include "../../util/add_a_hl.asm"
+#include "../../util/add_hl_a.asm"
 
 main:
     bcall(_clrscrf)
@@ -103,7 +103,7 @@ main:
 
         ex de, hl
         inc a
-        add_a_hl
+        add_hl_a
         ex de, hl
 
         jp loop1

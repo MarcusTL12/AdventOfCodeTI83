@@ -1,7 +1,7 @@
 #ifndef parse_u16_inc
 #define parse_u16_inc
 
-#include "add_a_hl.asm"
+#include "add_hl_a.asm"
 
 ; input:
 ; hl: pointer to string. Stops at first non-numerical digit, max 5 digits.
@@ -32,7 +32,7 @@ parse_u16:
         add hl, de ; hl += de
         pop de
 
-        add_a_hl                    ; if so, add to hl
+        add_hl_a                    ; if so, add to hl
         djnz parse_u16_loop
     parse_u16_loop_break:
 

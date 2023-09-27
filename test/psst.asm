@@ -10,7 +10,8 @@ main:
     bcall(_puts)
     bcall(_newline)
 
-
+    ld a, 2
+    ld hl, test_psst_mem
 
     bcall(_getkey) ; Pause
     ret

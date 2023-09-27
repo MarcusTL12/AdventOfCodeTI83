@@ -3,7 +3,7 @@
 title:
     .db "2022 d5p1",0
 
-#include "../../util/add_a_hl.asm"
+#include "../../util/add_hl_a.asm"
 
 ; Need 56 * 9 = 504 bytes of stack ram
 ; saferam2 has 531 bytes
@@ -82,7 +82,7 @@ main:
 
             ; a is now current stack size, and stacksize increased
 
-            add_a_hl ; hl now points to empty slot on top of stack
+            add_hl_a ; hl now points to empty slot on top of stack
             ld a, (de)
             ld (hl), a ; load element into stack
 
@@ -90,7 +90,7 @@ main:
 
             parse_stack_line_skip:
             ld a, 4
-            add_a_hl
+            add_hl_a
             inc c
             djnz loop_parse_stack_line
         jp loop_init_stacks
@@ -99,7 +99,7 @@ main:
     ld a, (nstacks)
     add a, a
     add a, a
-    add_a_hl
+    add_hl_a
     ; now hl points to beginning of move section in input
 
     ; but first we have to reverse the stacks
@@ -143,18 +143,18 @@ main:
         jp z, loop_crane_break
 
         ld a, 5
-        add_a_hl
+        add_hl_a
         call parse_u8
         ld (move_amt), a
 
         ld a, 6
-        add_a_hl
+        add_hl_a
         call parse_u8
         dec a
         ld (move_from), a
 
         ld a, 4
-        add_a_hl
+        add_hl_a
         call parse_u8
         dec a
         ld (move_to), a
@@ -175,7 +175,7 @@ main:
         ld (crane_ix_offset4 + 5), a
         crane_ix_offset1:
         ld a, (ix) ; offset set above
-        add_a_hl
+        add_hl_a
         ; hl now points to empty element on top of destination stack
 
         push hl ; save destination stack location
@@ -194,7 +194,7 @@ main:
         ld (crane_ix_offset3 + 5), a
         crane_ix_offset2:
         ld a, (ix) ; offset set above
-        add_a_hl
+        add_hl_a
         ; hl now points to empty element on top of source stack
 
         pop de ; get destination stack location
@@ -240,7 +240,7 @@ main:
 
         ld a, (de)
         dec a
-        add_a_hl
+        add_hl_a
         ld a, (hl)
         push_all
         bcall(_putc)
@@ -248,7 +248,7 @@ main:
 
         pop hl
         ld a, stack_cap
-        add_a_hl
+        add_hl_a
         inc de
         djnz loop_print_ans
 

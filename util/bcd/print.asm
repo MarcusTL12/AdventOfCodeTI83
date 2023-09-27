@@ -1,14 +1,14 @@
 #ifndef bcd_print_inc
 #define bcd_print_inc
 
-#include "../add_a_hl.asm"
+#include "../add_hl_a.asm"
 
 ; hl: pointer to bcd (least significant first)
 ; b: number of bytes (half number of digits)
 ; destroyed: d
 bcd_print:
     ld a, b
-    add_a_hl
+    add_hl_a
 
     ld c, 0
 

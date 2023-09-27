@@ -3,7 +3,7 @@
 title:
     .db "2022 d3p1",0
 
-#include "../../util/add_a_hl.asm"
+#include "../../util/add_hl_a.asm"
 
 main:
     bcall(_clrscrf)
@@ -52,7 +52,7 @@ main:
         srl b ; b = b / 2
 
         ld a, b
-        add_a_hl ; point to compartment 2
+        add_hl_a ; point to compartment 2
 
         push bc ; save length of compartment
 
@@ -100,7 +100,7 @@ main:
 
         ex de, hl
         inc a
-        add_a_hl
+        add_hl_a
         ex de, hl
 
         jp loop1

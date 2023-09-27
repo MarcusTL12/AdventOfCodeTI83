@@ -1,7 +1,7 @@
 #ifndef integer_is_neg_inc
 #define integer_is_neg_inc
 
-#include "../add_a_hl.asm"
+#include "../add_hl_a.asm"
 
 ; Checks if an integer is negative
 ; Inputs:
@@ -14,7 +14,7 @@
 integer_is_neg:
     ld a, b
     dec a
-    add_a_hl
+    add_hl_a
     or (hl)
     ret
 

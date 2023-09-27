@@ -1,7 +1,7 @@
 #ifndef bitset_u8_inc
 #define bitset_u8_inc
 
-#include "add_a_hl.asm"
+#include "add_hl_a.asm"
 
 ; Bit set with 8-bit indexing, meaning max 256 bits
 
@@ -38,7 +38,7 @@ bitset_u8_internal:
 
     ld c, a
     ld a, b
-    add_a_hl ; Make pointer point to byte
+    add_hl_a ; Make pointer point to byte
 
     bitset_u8_internal_bit_instruction:
     bit 0, a ; Specific instruction will be set before call

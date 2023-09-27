@@ -7,7 +7,7 @@ title:
 #define int_buf saferam1 + 2
 #define bcd_buf saferam1 + 6
 
-#include "../../util/add_a_hl.asm"
+#include "../../util/add_hl_a.asm"
 
 #include "../../util/debug/push_all.asm"
 ; #include "../../util/print_str_len.asm"
@@ -103,7 +103,7 @@ sum_sub_n:
     ; now loop through linked list of subdirs and call this routine recusively
 
     ld a, dir_subd
-    add_a_hl ; hl now points to memory address of pointer to first subdirectory
+    add_hl_a ; hl now points to memory address of pointer to first subdirectory
 
     push_all
     ld a, 'b'
@@ -154,7 +154,7 @@ sum_sub_n:
         pop hl
 
         ld a, dir_next
-        add_a_hl
+        add_hl_a
         ld e, (hl)
         inc hl
         ld d, (hl)
