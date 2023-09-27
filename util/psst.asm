@@ -347,9 +347,9 @@ psst_insert:
 ;   hl: pointer to psst
 ; output:
 ;   hl: number of elements in psst
-; time: 7 * 5 + 6 * 3 + 4 + 20 + 11 = 88
+; time: 7 * 4 + 6 * 2 + 4 + 20 * 2 = 84
 ; destroys:
-;   bc, de, af
+;   de, af
 psst_len:
     ld a, psst_num_sorted   ; 7
     add_hl_a                ; 20
@@ -357,11 +357,9 @@ psst_len:
     inc hl                  ; 6
     ld d, (hl)              ; 7
     inc hl                  ; 6
-    ld c, (hl)              ; 7
-    inc hl                  ; 6
-    ld b, (hl)              ; 7
+    ld a, (hl)              ; 7
     ex de, hl               ; 4
-    add hl, bc              ; 11
+    add_hl_a                ; 20
     ret
 
 #endif

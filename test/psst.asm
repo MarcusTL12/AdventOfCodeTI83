@@ -12,6 +12,12 @@ main:
 
     ld a, 2
     ld hl, test_psst_mem
+    call psst_init
+
+    ld hl, test_psst_mem
+    call psst_len
+
+    bcall(_disphl)
 
     bcall(_getkey) ; Pause
     ret
