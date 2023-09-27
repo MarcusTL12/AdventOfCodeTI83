@@ -240,14 +240,17 @@ psst_linear_search:
     ld a, (ix + psst_elsize)
 
     psst_linear_search_loop:
+        push bc
         push hl
         push de
         psst_linear_search_cmp_call:
         call 0
         pop de
         pop hl
+        pop bc
         jp z, psst_linear_search_found
 
+        ld a, (ix + psst_elsize)
         add_hl_a ; make hl point to next element
         djnz psst_linear_search_loop
 
@@ -327,7 +330,7 @@ psst_insert:
     ; Copy to hl
     ex de, hl
     ld b, 0
-    ld c, (ix)
+    ld c, (ix + psst_elsize)
     ldir
 
     ; Load carry flag
@@ -353,12 +356,11 @@ psst_insert:
 ;   hl: pointer to psst
 ; output:
 ;   hl: number of elements in psst
-; time: 7 * 4 + 6 * 2 + 4 + 20 * 2 = 84
+; time: 7 * 4 + 6 * 3 + 4 + 20 = 70
 ; destroys:
 ;   de, af
 psst_len:
-    ld a, psst_num_sorted   ; 7
-    add_hl_a                ; 20
+    inc hl                  ; 6
     ld e, (hl)              ; 7
     inc hl                  ; 6
     ld d, (hl)              ; 7

@@ -10,6 +10,11 @@ main:
     bcall(_puts)
     bcall(_newline)
 
+    ld hl, main
+    bcall(_disphl)
+    bcall(_newline)
+    bcall(_getkey) ; Pause
+
     #define x saferam1
 
     ld a, 2
@@ -47,7 +52,7 @@ main:
     call psst_len
     bcall(_disphl)
 
-    ld hl, 1000
+    ld hl, 752
     ld (x), hl
     ld de, x
     ld hl, test_psst_mem
@@ -61,7 +66,6 @@ main:
 
     ld hl, test_psst_mem
     call psst_len
-    push hl
     ld b, l
 
     ld hl, test_psst_mem + 7
