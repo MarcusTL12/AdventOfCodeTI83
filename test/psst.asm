@@ -10,9 +10,17 @@ main:
     bcall(_puts)
     bcall(_newline)
 
+    #define x saferam1
+
     ld a, 2
     ld hl, test_psst_mem
     call psst_init
+
+    ld hl, 500
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
 
     ld hl, test_psst_mem
     call psst_len
@@ -26,6 +34,3 @@ main:
 
 test_psst_mem:
     .fill 50
-
-test_data:
-    .db "yrokpstylc",0

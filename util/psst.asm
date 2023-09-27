@@ -8,6 +8,8 @@
 ; Temporarily using selection sort until quicksort works
 #include "ssort.asm"
 
+#include "debug/push_all.asm"
+
 ; Partially Sorted Search Table (psst)
 
 ; Internal structure offsets
@@ -232,6 +234,9 @@ psst_linear_search:
 
     ; load num unsorted into b, and loop til found element.
     ld b, (ix + psst_num_unsorted)
+    xor a
+    cp b
+    jp z, psst_linear_search_empty
     ld a, (ix + psst_elsize)
 
     psst_linear_search_loop:
@@ -246,6 +251,7 @@ psst_linear_search:
         add_hl_a ; make hl point to next element
         djnz psst_linear_search_loop
 
+    psst_linear_search_empty:
     scf ; did not find, set carry flag
     ret
 ;
