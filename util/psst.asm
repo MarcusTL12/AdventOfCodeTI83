@@ -20,7 +20,7 @@
 #define psst_cmp_fn_ptr 5
 #define psst_data 7
 
-#define psst_init_unsorted_cap 8
+#define psst_init_unsorted_cap 4
 
 ; Initializes the a psst. This is pretty inoptimal to be flexible,
 ; but it's only run once per psst, so it's fine.
@@ -302,7 +302,18 @@ psst_sort:
     add_hl_a
     ex de, hl ; de is now total length and hl is data
 
+    ; Update length of sorted and unsorted block
+    xor a
+    ld (ix + psst_num_unsorted), a
+    ld (ix + psst_num_sorted), e
+    ld (ix + psst_num_sorted + 1), d
+
+    ; TODO: update max unsorted
+
     ld a, (ix + psst_elsize)
+
+    ld c, (ix + psst_cmp_fn_ptr)
+    ld b, (ix + psst_cmp_fn_ptr + 1)
 
     jp ssort ; tail call (change to qsort)
 
@@ -339,6 +350,9 @@ psst_insert:
     pop af
 
     ret nc ; return if not inserted
+
+    push ix
+    pop hl
 
     ; If inserted, increase count
     inc (ix + psst_num_unsorted)

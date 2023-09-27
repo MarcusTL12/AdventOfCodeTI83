@@ -22,16 +22,6 @@ main:
     ld de, test_cmp
     call psst_init
 
-    ld hl, 500
-    ld (x), hl
-    ld de, x
-    ld hl, test_psst_mem
-    call psst_insert
-
-    ld hl, test_psst_mem
-    call psst_len
-    bcall(_disphl)
-
     ld hl, 752
     ld (x), hl
     ld de, x
@@ -52,7 +42,17 @@ main:
     call psst_len
     bcall(_disphl)
 
-    ld hl, 752
+    ld hl, 500
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
+
+    ld hl, test_psst_mem
+    call psst_len
+    bcall(_disphl)
+
+    ld hl, 685
     ld (x), hl
     ld de, x
     ld hl, test_psst_mem
