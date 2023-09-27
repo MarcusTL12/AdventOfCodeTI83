@@ -28,19 +28,11 @@ main:
     ld hl, test_psst_mem
     call psst_insert
 
-    ld hl, test_psst_mem
-    call psst_len
-    bcall(_disphl)
-
     ld hl, 1000
     ld (x), hl
     ld de, x
     ld hl, test_psst_mem
     call psst_insert
-
-    ld hl, test_psst_mem
-    call psst_len
-    bcall(_disphl)
 
     ld hl, 500
     ld (x), hl
@@ -48,19 +40,36 @@ main:
     ld hl, test_psst_mem
     call psst_insert
 
-    ld hl, test_psst_mem
-    call psst_len
-    bcall(_disphl)
-
     ld hl, 685
     ld (x), hl
     ld de, x
     ld hl, test_psst_mem
     call psst_insert
 
+    ld hl, 8
+    ld (x), hl
+    ld de, x
     ld hl, test_psst_mem
-    call psst_len
-    bcall(_disphl)
+    call psst_insert
+
+    ld hl, 3
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
+
+    ld hl, 752
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
+
+    ; TODO: Figure out why this is duplicated
+    ld hl, 8
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
 
     bcall(_newline)
 

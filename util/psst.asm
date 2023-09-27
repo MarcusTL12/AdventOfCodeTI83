@@ -59,11 +59,26 @@ psst_init:
 ;   hl: pointer to element if it's found
 ;   carry flag set if not found
 psst_binary_search:
-    push iy ; {0} Dont brake OS
-    push de ; {1} save pointer to reference element
+    ; TODO: Test with only one sorted element (Should work fine)
+
+    push iy ; {0} Don't break OS
 
     push hl
     pop ix ; set to have easy access to struct parameters
+
+    ; Chech if there are any elements
+    push hl ; {1} psst
+    push de ; {2} ref
+    ld hl, 0
+    ld e, (ix + psst_num_sorted)
+    ld d, (ix + psst_num_sorted + 1)
+    bcall(_cphlde)
+    pop de ; {2} ref
+    pop hl ; {1} psst
+
+    jp z, psst_binary_search_not_found
+
+    push de ; {1} save pointer to reference element
 
     ; Set call pointer
     ld e, (ix + psst_cmp_fn_ptr)
@@ -271,12 +286,12 @@ psst_linear_search:
 ;       or to the next free space if not
 ;   carry flag set if not found
 psst_search:
-    ; push hl
-    ; push de
-    ; call psst_binary_search
-    ; jp nc, psst_search_binary_search_found
-    ; pop de
-    ; pop hl
+    push hl
+    push de
+    call psst_binary_search
+    jp nc, psst_search_binary_search_found
+    pop de
+    pop hl
 
     jp psst_linear_search ; tail call
 
