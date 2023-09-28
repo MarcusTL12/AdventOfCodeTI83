@@ -65,7 +65,7 @@ main:
     loop1_break:
 
     ex de, hl
-    bcall(_disphl)
+    call mul_h_l
 
     bcall(_getkey) ; Pause
     ret

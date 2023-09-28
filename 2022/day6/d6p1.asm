@@ -13,7 +13,7 @@ main:
     ld hl, input
     ld a, 4
     call solve
-    bcall(_disphl)
+    call mul_h_l
 
     bcall(_getkey) ; Pause
     ret
