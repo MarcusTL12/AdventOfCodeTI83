@@ -10,14 +10,14 @@ mul_a_hl:
     push hl
     push af
     ld l, a
-    bcall(_htimesl)
+    call mul_h_l
     ex de, hl
     pop af
     pop hl
 
     push de
     ld h, a
-    bcall(_htimesl)
+    call mul_h_l
     pop de
 
     ex de, hl

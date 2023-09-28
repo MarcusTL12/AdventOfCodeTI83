@@ -169,7 +169,7 @@ get_tree:
     inc a
     ld h, a
     push de
-    bcall(_htimesl)
+    call mul_h_l
     pop de
 
     ld a, e

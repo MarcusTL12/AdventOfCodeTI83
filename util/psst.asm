@@ -2,6 +2,7 @@
 #define psst_inc
 
 #include "add_hl_a.asm"
+#include "mul_h_l.asm"
 #include "mul_a_hl.asm"
 #include "div_hl_2.asm"
 

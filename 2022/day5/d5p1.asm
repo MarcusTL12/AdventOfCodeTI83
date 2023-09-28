@@ -65,7 +65,7 @@ main:
             ld l, c
             push de
             push bc
-            bcall(_htimesl)
+            call mul_h_l
             ld de, stacks
             add hl, de
             pop bc
@@ -113,7 +113,7 @@ main:
         ld l, c
         push de
         push bc
-        bcall(_htimesl)
+        call mul_h_l
         ld de, stacks
         add hl, de
         pop bc
@@ -164,7 +164,7 @@ main:
 
         ld l, a
         ld h, stack_cap
-        bcall(_htimesl)
+        call mul_h_l
         ld de, stacks
         add hl, de
         ; hl now points to bottom of destination stack
@@ -183,7 +183,7 @@ main:
         ld a, (move_from)
         ld l, a
         ld h, stack_cap
-        bcall(_htimesl)
+        call mul_h_l
         ld de, stacks
         add hl, de
         ; hl now points to bottom of source stack

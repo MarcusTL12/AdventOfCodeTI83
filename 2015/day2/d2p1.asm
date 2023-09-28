@@ -34,7 +34,7 @@ main:
 
         ; buf = x * y
         ld hl, (xyz)
-        bcall(_htimesl)
+        call mul_h_l
         ld (buf), hl
 
         ; l = x + y
@@ -46,7 +46,7 @@ main:
         ; hl = l * z
         ld a, (xyz + 2)
         ld h, a
-        bcall(_htimesl)
+        call mul_h_l
 
         ; buf = (buf + hl) * 2
         ex de, hl
@@ -85,7 +85,7 @@ main:
 
         ; hl = buf + d * e
         ex de, hl
-        bcall(_htimesl)
+        call mul_h_l
         ld de, (buf)
         add hl, de
         ex de, hl

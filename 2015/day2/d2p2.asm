@@ -34,7 +34,7 @@ main:
 
         ; hl = x * y
         ld hl, (xyz)
-        bcall(_htimesl)
+        call mul_h_l
 
         ; buf = hl * z ; Hope that x * y * z always fits in 16-bit
         ld a, (xyz + 2)
