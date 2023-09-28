@@ -138,7 +138,7 @@ main:
         djnz loop_w
 
     ld hl, (ans)
-    call mul_h_l
+    bcall(_disphl)
 
     bcall(_getkey) ; Pause
     ret

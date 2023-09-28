@@ -22,7 +22,7 @@ main:
     ; ld (saferam1 + 150), ix
 
     ld hl, heap
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
 
     ld hl, input
@@ -67,7 +67,7 @@ sum_sub_n:
     bcall(_newline)
     pop hl
     push hl
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
     pop hl
     ld b, 8
@@ -95,7 +95,7 @@ sum_sub_n:
     ld a, 'B'
     bcall(_putc)
     bcall(_newline)
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
     bcall(_getkey)
     pop_all
@@ -110,7 +110,7 @@ sum_sub_n:
     bcall(_putc)
     bcall(_newline)
     ld b, 8
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
     bcall(_getkey)
     pop_all
@@ -125,7 +125,7 @@ sum_sub_n:
         ld a, 'C'
         bcall(_putc)
         bcall(_newline)
-        call mul_h_l
+        bcall(_disphl)
         bcall(_newline)
         bcall(_getkey)
         pop_all

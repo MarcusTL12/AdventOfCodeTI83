@@ -35,7 +35,7 @@ main:
     ld bc, -input
     add hl, bc
 
-    call mul_h_l ; print(hl)
+    bcall(_disphl) ; print(hl)
 
     bcall(_getkey) ; Pause
     ret

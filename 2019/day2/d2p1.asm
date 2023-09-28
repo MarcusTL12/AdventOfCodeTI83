@@ -21,7 +21,7 @@ main:
     ; rr h
     ; rr l
 
-    call mul_h_l
+    bcall(_disphl)
 
     bcall(_getkey) ; Pause
     ret

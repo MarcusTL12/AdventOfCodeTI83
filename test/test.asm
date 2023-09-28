@@ -11,14 +11,14 @@ main:
     bcall(_newline)
 
     ld hl, main
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
     bcall(_getkey) ; Pause
 
     ld h, 78
     ld l, 56
     call mul_h_l
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
 
     bcall(_getkey) ; Pause

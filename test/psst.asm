@@ -11,7 +11,7 @@ main:
     bcall(_newline)
 
     ld hl, main
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
     bcall(_getkey) ; Pause
 
@@ -90,7 +90,7 @@ main:
 
         push hl
         ex de, hl
-        call mul_h_l
+        bcall(_disphl)
         pop hl
         pop bc
         djnz loop1

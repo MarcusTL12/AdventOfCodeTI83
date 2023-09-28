@@ -39,7 +39,7 @@ integer_divrem_a:
         ex de, hl
 
         ; push_all
-        ; call mul_h_l
+        ; bcall(_disphl)
         ; bcall(_newline)
         ; pop_all
 

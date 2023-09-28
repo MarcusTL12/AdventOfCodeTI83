@@ -62,7 +62,7 @@ parse_filesystem_rec:
     bcall(_newline)
     push ix
     pop hl
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
     bcall(_getkey)
     pop_allx
@@ -127,7 +127,7 @@ parse_filesystem_rec:
         bcall(_putc)
         bcall(_newline)
         pop hl
-        call mul_h_l
+        bcall(_disphl)
         bcall(_newline)
         bcall(_getkey)
         pop_allx
@@ -175,7 +175,7 @@ parse_filesystem_rec:
         bcall(_putc)
         bcall(_newline)
         pop hl
-        call mul_h_l
+        bcall(_disphl)
         bcall(_newline)
         bcall(_getkey)
         pop_allx
@@ -190,7 +190,7 @@ parse_filesystem_rec:
         bcall(_newline)
         pop hl
         push hl
-        call mul_h_l
+        bcall(_disphl)
         bcall(_newline)
         pop hl
         ld b, 7
@@ -250,7 +250,7 @@ parse_filesystem_rec:
     bcall(_newline)
     pop hl
     push hl
-    call mul_h_l
+    bcall(_disphl)
     bcall(_newline)
     pop hl
     ld b, 7

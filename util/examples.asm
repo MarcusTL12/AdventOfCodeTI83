@@ -11,7 +11,7 @@ loop_16_bit_double:
             dec c
             ld l, b
             ld h, c
-            call mul_h_l
+            bcall(_disphl)
             bcall(_newline)
             pop bc
 
@@ -30,7 +30,7 @@ loop_16_bit_single:
         push bc
         ld l, c
         ld h, b
-        call mul_h_l
+        bcall(_disphl)
         bcall(_newline)
         pop bc
 

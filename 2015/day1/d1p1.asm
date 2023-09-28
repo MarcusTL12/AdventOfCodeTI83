@@ -29,7 +29,7 @@ main:
             jp loop1     ; }
     loop1_exit:
 
-    call mul_h_l ; print(hl)
+    bcall(_disphl) ; print(hl)
 
     bcall(_getkey) ; Pause
     ret

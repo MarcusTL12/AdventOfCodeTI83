@@ -110,7 +110,7 @@ main:
     loop1_break:
 
     ex de, hl
-    call mul_h_l
+    bcall(_disphl)
 
     bcall(_getkey) ; Pause
     ret
