@@ -53,6 +53,10 @@ psst_init:
 
     ret
 
+; Hack to use space in linear search routine as
+; tmp memory here
+#define psst_binary_search_tmp_storage2 psst_linear_search_cmp_call + 1
+
 ; input:
 ;   hl: pointer to psst
 ;   de: pointer to reference element
@@ -60,7 +64,7 @@ psst_init:
 ;   hl: pointer to element if it's found
 ;   carry flag set if not found
 psst_binary_search:
-    ; TODO: Test with only one sorted element (Should work fine)
+    ; TODO: Test with only one sorted element (Should work fine, it was not)
 
     push iy ; {0} Don't break OS
 
@@ -131,9 +135,7 @@ psst_binary_search:
         ; de: i_hi
         ; bc: i_lo
 
-        ; Hack to use space in linear search routine as
-        ; tmp memory here
-        ld (psst_linear_search_cmp_call), de
+        ld (psst_binary_search_tmp_storage2), de
         ld (psst_binary_search_tmp_storage), hl
 
         ; Now use i_mid to find pointer to middle element
@@ -180,7 +182,7 @@ psst_binary_search:
 
         ; This is run if mid < ref
         ; de = i_hi
-        ld de, (psst_linear_search_cmp_call)
+        ld de, (psst_binary_search_tmp_storage2)
         ; hl = i_mid
         ld hl, (psst_binary_search_tmp_storage)
 
