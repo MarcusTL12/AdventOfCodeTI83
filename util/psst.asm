@@ -200,29 +200,21 @@ psst_binary_search:
         ; de: i_hi (new)
         ; bc: p_ref
 
-        ; Check if i_lo >= i_hi; if so, return not found
+        ; Check if i_lo >= i_hi; if not, return to top of loop
         ex de, hl
         bcall(_cphlde)
         ex de, hl
-        jp c, psst_binary_search_not_found
+        jp nc, psst_binary_search_loop
 
-        ; TODO: swap places of 'found' and 'not found' sections
-        ; and remove redundant jp
-
-        ; If we are here, i_lo < i_hi and we have not found
-        ; the element, so jump back up and do another iteration
-
-        jp psst_binary_search_loop
+    psst_binary_search_not_found:
+    scf
+    pop iy ; {0}
+    ret
 
     psst_binary_search_found:
     ld hl, (psst_binary_search_tmp_storage)
     or a
 
-    pop iy ; {0}
-    ret
-
-    psst_binary_search_not_found:
-    scf
     pop iy ; {0}
     ret
 
