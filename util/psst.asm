@@ -64,8 +64,6 @@ psst_init:
 ;   hl: pointer to element if it's found
 ;   carry flag set if not found
 psst_binary_search:
-    ; TODO: Test with only one sorted element (Should work fine, it was not)
-
     push iy ; {0} Don't break OS
 
     push hl
@@ -174,8 +172,16 @@ psst_binary_search:
 
         ; This is run if mid > ref
         ; hl = i_lo
-        ; de = i_mid
+        ; de = i_mid - 1
         ld de, (psst_binary_search_tmp_storage)
+        dec de
+
+        ; Need to check if de overflowed. If so, return not found
+        push hl
+        ld hl, ffffh
+        bcall(_cphlde)
+        pop hl
+        jp z, psst_binary_search_not_found
 
         jp psst_binary_search_post_shrink
         psst_binary_search_less:
@@ -183,8 +189,9 @@ psst_binary_search:
         ; This is run if mid < ref
         ; de = i_hi
         ld de, (psst_binary_search_tmp_storage2)
-        ; hl = i_mid
+        ; hl = i_mid + 1
         ld hl, (psst_binary_search_tmp_storage)
+        inc hl
 
         psst_binary_search_post_shrink:
 
@@ -193,9 +200,14 @@ psst_binary_search:
         ; de: i_hi (new)
         ; bc: p_ref
 
-        ; Check if i_lo == i_hi; if so, return not found
+        ; Check if i_lo >= i_hi; if so, return not found
+        ex de, hl
         bcall(_cphlde)
-        jp z, psst_binary_search_not_found
+        ex de, hl
+        jp c, psst_binary_search_not_found
+
+        ; TODO: swap places of 'found' and 'not found' sections
+        ; and remove redundant jp
 
         ; If we are here, i_lo < i_hi and we have not found
         ; the element, so jump back up and do another iteration
@@ -374,6 +386,7 @@ psst_insert:
 
     ; If inserted, increase count
     inc (ix + psst_num_unsorted)
+    ; TODO: fix this. Need to add 256 to num sorted
     jp z, psst_sort ; tail call sort if overflow
 
     ; Check for soft overflow
