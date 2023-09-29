@@ -94,6 +94,7 @@ qsort_partition:
     inc hl ; hl = de - hl + 1, length of array part
     ld (qsort_part_length), hl ; save length
 
+    ex de, hl ; de = length of part
     call rand_hl ; chose pivot randomly
 
     ; bc = hl
