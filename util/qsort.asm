@@ -5,17 +5,23 @@
 
 #include "add_hl_a.asm"
 #include "mul_a_hl.asm"
+#include "mul_h_l.asm"
 #include "div_hl_c.asm"
 #include "neg_hl.asm"
 #include "rand_hl.asm"
 
 #include "mem/swap.asm"
 
-#define array_base      saferam1
-#define elsize          saferam1 + 2
-#define part_length     saferam1 + 3
-#define pivot_address   saferam1 + 5
-#define tmp_pivot_index saferam1 + 7
+qsort_array_base:
+    .dw 0
+qsort_elsize:
+    .db 0
+qsort_part_length:
+    .dw 0
+qsort_pivot_address:
+    .dw 0
+qsort_tmp_pivot_index:
+    .dw 0
 
 ; quicksort (unstable, random)
 ; input
@@ -28,12 +34,11 @@
 ;   de: pointer to element b
 ;   compares a - b
 ;   output: zero flag set if equal, carry flag set if b > a
-;   expected to destroy all registers, but not saferam1[0:6]
+;   expected to destroy all registers
 ; destroys all registers
-; and saferam1[0:6]
 qsort:
-    ld (elsize), a ; save elsize
-    ld (array_base), hl ; save array_base
+    ld (qsort_elsize), a ; save elsize
+    ld (qsort_array_base), hl ; save array_base
     ld (qsort_partition_compare_call + 1), bc ; Set call instruction
     ld hl, 0 ; hl is now index to first element
     dec de ; de is now index to last element
@@ -54,7 +59,7 @@ qsort_rec:
     pop hl
 
     push hl
-    ld bc, (tmp_pivot_index)
+    ld bc, (qsort_tmp_pivot_index)
     add hl, bc
     push hl
     pop bc
@@ -80,56 +85,60 @@ qsort_rec:
 ; output
 ;   hl: pointer to pivot
 qsort_partition:
-    push hl
-    push de
+    push hl ; {0} i_l
+    push de ; {1} i_h
 
-    neg_hl
-    add hl, de
-    inc hl ; hl = de - hl, length of array part
-    ld (part_length), hl ; save length
+    or a
     ex de, hl
+    sbc hl, de
+    inc hl ; hl = de - hl + 1, length of array part
+    ld (qsort_part_length), hl ; save length
+
     call rand_hl ; chose pivot randomly
-    push hl
-    pop bc ; bc = hl
 
-    pop de
-    pop hl
+    ; bc = hl
+    ld b, h
+    ld c, l
 
-    push hl
-    push de
+    pop de ; {1} i_h
+    pop hl ; {0} i_l
+
+    push hl ; {0} i_l
+    push de ; {1} i_h
     add hl, bc
-    ld a, (elsize)
+    ld a, (qsort_elsize)
     call mul_a_hl
-    ld bc, (array_base)
+    ld bc, (qsort_array_base)
     add hl, bc
-    ld (pivot_address), hl
-    pop de
-    pop hl
+    ld (qsort_pivot_address), hl
+    pop de ; {1} i_h
+    pop hl ; {0} i_l
 
     ; (pivot_address) is now set
 
-    push hl
-    push de
+    push hl ; {0} i_l
+    push de ; {1} i_h
 
+    ; Swap pivot element with last element
     ex de, hl
-    ld a, (elsize)
+    ld a, (qsort_elsize)
     call mul_a_hl
-    ld bc, (array_base)
+    ld bc, (qsort_array_base)
     add hl, bc
-    ld de, (pivot_address)
-    ld (pivot_address), hl
-    ld a, (elsize)
+    ld de, (qsort_pivot_address)
+    ld (qsort_pivot_address), hl
+    ld a, (qsort_elsize)
     ld b, a
-    call mem_swap ; swap pivot with last element
+    call mem_swap
 
-    pop de
-    pop hl
+    pop de ; {1} i_h
+    pop hl ; {0} i_l
 
     ; Now pivot is the last element
 
-    ld a, (elsize)
+    ld a, (qsort_elsize)
     call mul_a_hl ; scale by elsize
-    ld bc, (array_base)
+    ld bc, (qsort_array_base)
     add hl, bc ; hl is now memory address of start
 
     push hl
@@ -137,10 +146,10 @@ qsort_partition:
 
     exx
     ld hl, 0
-    ld (tmp_pivot_index), hl
+    ld (qsort_tmp_pivot_index), hl
     exx
 
-    ld bc, (part_length)
+    ld bc, (qsort_part_length)
     dec bc ; looping over length - 1
     inc b
     qsort_partition_loop1: ; double 16-bit loop
@@ -155,7 +164,7 @@ qsort_partition:
 
             ; do compare between cur element (hl) and pivot
             ex de, hl ; make cur element be (de)
-            ld hl, (pivot_address)
+            ld hl, (qsort_pivot_address)
             qsort_partition_compare_call:
             call 0 ; address of compare function will be set at runtime
             ; Now carry flag will be set if cur element > pivot
@@ -171,25 +180,25 @@ qsort_partition:
 
             push hl
             push de
-            ld a, (elsize)
+            ld a, (qsort_elsize)
             ld b, a
             call mem_swap ; do the swap
             pop de
             pop hl
 
             ex de, hl
-            ld a, (elsize)
+            ld a, (qsort_elsize)
             add_hl_a ; increment tmp pivot to next element
             ex de, hl
 
             exx
-            ld hl, tmp_pivot_index
+            ld hl, qsort_tmp_pivot_index
             inc (hl) ; increment index of tmp pivot
             exx
 
             qsort_partition_not_swap:
 
-            ld a, (elsize)
+            ld a, (qsort_elsize)
             add_hl_a ; hl points to next element
 
             pop bc ; get looping index
@@ -199,8 +208,8 @@ qsort_partition:
         ld c, a
         djnz qsort_partition_loop1
 
-    ld hl, (pivot_address)
-    ld a, (elsize)
+    ld hl, (qsort_pivot_address)
+    ld a, (qsort_elsize)
     ld b, a
     call mem_swap
 
@@ -211,26 +220,26 @@ qsort_partition:
 ;   hl: index a
 ;   de: index b
 qsort_swap:
-    ld a, (elsize)
+    ld a, (qsort_elsize)
     push de
     call mul_a_hl ; scale a
     pop de
 
     ex de, hl
-    ld a, (elsize)
+    ld a, (qsort_elsize)
     push de
     call mul_a_hl ; scale b
     pop de
 
     ; now indices are scaled with elsize (and swapped, does not matter)
 
-    ld bc, (array_base)
+    ld bc, (qsort_array_base)
     add hl, bc
     ex de, hl
     add hl, bc
 
     ; hl, de point to memory locations
-    ld a, (elsize)
+    ld a, (qsort_elsize)
     ld b, a
     jp mem_swap ; tail call
 

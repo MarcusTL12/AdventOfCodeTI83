@@ -21,7 +21,7 @@ ssort_rem_len:
 ;           de: pointer to element b
 ;           compares a - b
 ;           output: zero flag set if equal, carry flag set if b > a
-;           expected to destroy all registers, but not saferam1[0:6]
+;           expected to destroy all registers
 ; destroys all registers
 ssort:
     ld (ssort_elsize), a
