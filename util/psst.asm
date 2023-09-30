@@ -20,7 +20,8 @@
 #define psst_cmp_fn_ptr 5
 #define psst_data 7
 
-#define psst_init_unsorted_cap 4
+; TODO: test that it works properly when cap is 255
+#define psst_init_unsorted_cap 8
 
 ; Initializes the a psst. This is pretty inoptimal to be flexible,
 ; but it's only run once per psst, so it's fine.
@@ -329,7 +330,11 @@ psst_sort:
     ld (ix + psst_num_sorted), e
     ld (ix + psst_num_sorted + 1), d
 
-    ; TODO: update max unsorted
+    ; update cap
+    ex de, hl
+    call psst_get_opt_cap
+    ld (ix + psst_max_unsorted), a
+    ex de, hl
 
     ld a, (ix + psst_elsize)
 
@@ -405,5 +410,37 @@ psst_len:
     ex de, hl               ; 4
     add_hl_a                ; 20
     ret
+
+; input:
+;   hl: length of psst
+; output:
+;   a: new unsorted cap
+; destroys:
+;   nothing
+psst_get_opt_cap:
+    ; if h != 0; return max 255
+    xor a
+    cp h
+    ld a, 255
+    ret nz
+
+    ld a, 16
+    cp l
+    ld a, 8
+    ret nc
+
+    ld a, 32
+    cp l
+    ld a, 16
+    ret nc
+
+    ld a, 128
+    cp l
+    ld a, 64
+    ret nc
+
+    ld a, 128
+    ret
+
 
 #endif
