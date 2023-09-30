@@ -1,7 +1,7 @@
 #include "../header.asm"
 
 title:
-    .db "test ssort",0
+    .db "test qsort",0
 
 main:
     bcall(_clrscrf)
