@@ -46,7 +46,6 @@ main:
     ld hl, test_psst_mem
     call psst_insert
 
-    ; TODO: Figure out why this messes up memory during binary search
     ld hl, 8
     ld (x), hl
     ld de, x
@@ -65,7 +64,30 @@ main:
     ld hl, test_psst_mem
     call psst_insert
 
-    ; TODO: Figure out why this is duplicated
+    ld hl, 123
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
+
+    ld hl, 321
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
+
+    ld hl, 555
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
+
+    ld hl, 7898
+    ld (x), hl
+    ld de, x
+    ld hl, test_psst_mem
+    call psst_insert
+
     ld hl, 8
     ld (x), hl
     ld de, x
