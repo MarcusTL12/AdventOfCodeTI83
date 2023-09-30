@@ -6,8 +6,7 @@
 #include "mul_a_hl.asm"
 #include "div_hl_2.asm"
 
-; Temporarily using selection sort until quicksort works
-#include "ssort.asm"
+#include "qsort.asm"
 
 #include "debug/push_all.asm"
 
@@ -337,7 +336,7 @@ psst_sort:
     ld c, (ix + psst_cmp_fn_ptr)
     ld b, (ix + psst_cmp_fn_ptr + 1)
 
-    jp ssort ; tail call (change to qsort)
+    jp qsort ; tail call
 
 ; input:
 ;   hl: pointer to psst

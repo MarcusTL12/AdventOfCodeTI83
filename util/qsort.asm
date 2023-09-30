@@ -23,8 +23,6 @@ qsort_pivot_address:
 qsort_tmp_pivot_index:
     .dw 0
 
-.fill 4
-
 ; quicksort (unstable, random)
 ; input
 ; a: size of element
