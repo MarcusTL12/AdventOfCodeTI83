@@ -3,9 +3,9 @@
 
 #include "inc.asm"
 
-; Carry will carry on until no carry. Do not use for overflow
 ; hl: pointer to destination integer
 ; de: number to add
+; b: number of bytes
 ; destroys: bc, hl
 integer_add_de:
     ld c, (hl)
@@ -20,6 +20,9 @@ integer_add_de:
 
     inc hl
     inc hl
+    dec b
+    dec b
+    ret z ; return if b == 0
     ret nc ; return if 16 bit addition did not carry
     jp integer_inc ; tail call
 

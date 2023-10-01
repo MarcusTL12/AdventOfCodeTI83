@@ -7,6 +7,8 @@
 ; destroys:
 ; hl = points to first byte after zerod memory
 ; b
+; time:
+;   7 + 6 + 13 = 26 per byte
 mem_set:
     ld (hl), a
     inc hl

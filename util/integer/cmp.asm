@@ -22,9 +22,8 @@ integer_cmp:
     integer_cmp_loop:
         dec hl
         dec de
-        ld c, (hl)
         ld a, (de)
-        cp c
+        cp (hl)
         jp nz, integer_cmp_loop_break
         djnz integer_cmp_loop
     integer_cmp_loop_break:

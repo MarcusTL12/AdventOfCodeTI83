@@ -14,7 +14,7 @@ integer_dec:
         ld (hl), a
         inc hl
         ret c
-        djnz integer_dec
+        djnz integer_dec_loop
     ret
 
 #endif

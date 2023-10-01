@@ -10,11 +10,12 @@
 ; Returns
 ;   Sign flag set if negative
 ; Destroys
-;   hl
+;   hl, a
 integer_is_neg:
     ld a, b
     dec a
     add_hl_a
+    xor a
     or (hl)
     ret
 

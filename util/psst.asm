@@ -8,8 +8,6 @@
 
 #include "qsort.asm"
 
-#include "debug/push_all.asm"
-
 ; Partially Sorted Search Table (psst)
 
 ; Internal structure offsets

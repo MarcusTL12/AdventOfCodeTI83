@@ -4,6 +4,11 @@
 #include "../mem/set.asm"
 #include "../mem/lshft.asm"
 
+bcd_outlen:
+    .db 0
+bcd_inplen:
+    .db 0
+
 ; inputs:
 ;   hl: pointer to input
 ;   de: pointer to bcd output
@@ -11,22 +16,18 @@
 ;   c: number of bytes in bcd output
 ; destroys:
 ;   zeroes input memory
-;   saferam1[0:1]
 bcd_make:
-    #define outlen saferam2
-    #define inplen saferam2 + 1
-
-    ld (outlen), bc ; Save away lengths
+    ld (bcd_outlen), bc ; Save away lengths
     ex de, hl       ; zero out bcd buffer (and swap pointers)
     push hl
-    ld a, (outlen)
+    ld a, (bcd_outlen)
     ld b, a
     xor a
     call mem_set
     pop hl
 
     and a ; b = 8 * saferam1[0]
-    ld a, (inplen)
+    ld a, (bcd_inplen)
     rla
     rla
     rla
@@ -37,14 +38,14 @@ bcd_make:
         and a ; clear carry flag
         ex de, hl ; Left shift input
         push hl
-        ld a, (inplen)
+        ld a, (bcd_inplen)
         ld b, a
         call mem_lshft
         pop hl
         ex de, hl
 
         push hl
-        ld a, (outlen)
+        ld a, (bcd_outlen)
         ld b, a
         bcd_make_loop2:
             ld a, (hl)
