@@ -169,6 +169,14 @@ main:
         cp (hl)
         inc hl
         jp nz, loop1
+    
+    ld hl, (h_lines)
+    bcall(_disphl)
+
+    bcall(_newline)
+
+    ld hl, (v_lines)
+    bcall(_disphl)
 
     bcall(_getkey) ; Pause
     ret
@@ -226,9 +234,9 @@ parse_dir:
 ; Each line segment is given by the starting coord then the ending coord
 ; as N byte integers.
 h_lines:
-    .fill 2 * 2 + 5 * N * 2
+    .fill 2 * 2 + 160 * N * 2
 v_lines:
-    .fill 2 * 2 + 5 * N * 2
+    .fill 2 * 2 + 160 * N * 2
 
 input:
     #incbin "ex1.txt"
