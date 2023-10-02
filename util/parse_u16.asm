@@ -17,7 +17,6 @@ parse_u16:
     ld b, 5
     parse_u16_loop:
         ld a, (de)
-        inc de
         sub 48
         cp 10
         jp nc, parse_u16_loop_break ; check char is numeric
@@ -33,6 +32,7 @@ parse_u16:
         pop de
 
         add_hl_a                    ; if so, add to hl
+        inc de
         djnz parse_u16_loop
     parse_u16_loop_break:
 
