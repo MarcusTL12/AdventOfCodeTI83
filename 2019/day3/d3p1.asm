@@ -150,6 +150,20 @@ main:
         dec hl
         ld (hl), e
 
+        ; Increment pointer to next free (TODO: fix this)
+        inc hl
+        inc hl
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        ex de, hl
+        ld a, 2 * N
+        add_hl_a
+        ex de, hl
+        ld (hl), d
+        dec hl
+        ld (hl), e
+
         pop hl ; {0}
         ld a, '\n'
         cp (hl)
