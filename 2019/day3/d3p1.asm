@@ -3,7 +3,7 @@
 title:
    .db "2019 d3p1",0
 
-#include "add_hl_a.asm"
+#include "../../util/add_hl_a.asm"
 
 ; constants
 #define N 3
@@ -114,7 +114,7 @@ main:
 
         ; If carry flag (negative), swap first and second component
         jr nc, not_neg
-        push hl ; {1}
+        push hl ; {0}
 
         ld hl, (hv_ptr)
         inc hl
@@ -135,8 +135,10 @@ main:
         ld b, N
         call mem_swap
 
-        pop hl ; {1}
+        pop hl ; {0}
         not_neg:
+
+        push hl ; {0}
 
         ; Increment segment count
         ld hl, (hv_ptr)
