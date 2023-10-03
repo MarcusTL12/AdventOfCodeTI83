@@ -1,7 +1,6 @@
 #ifndef integer_sub_de_inc
 #define integer_sub_de_inc
 
-#include "inc.asm"
 #include "sub_a.asm"
 
 ; hl: pointer to destination integer

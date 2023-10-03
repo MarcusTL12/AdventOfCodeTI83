@@ -10,6 +10,7 @@
 ; destroys: hl, a, b
 integer_sub_a:
     neg
+    ret z
     add a, (hl)
     ld (hl), a
     ret c

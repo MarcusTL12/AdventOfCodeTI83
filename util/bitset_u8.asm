@@ -48,7 +48,7 @@ bitset_u8_internal:
 ; Specific entry points:
 
 ; Set the 2 most significant bits of 2nd byte of bit instruction
-; and the 3 least significant bits to 111 to work on register a
+; and the 3 least significant bits to 110 to work on register (hl)
 
 ; Tests bit
 bitset_u8_bit:

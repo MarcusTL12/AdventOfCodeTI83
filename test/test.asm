@@ -3,6 +3,8 @@
 title:
     .db "test",0
 
+#define x saferam1
+
 main:
     bcall(_clrscrf)
     bcall(_homeup)
@@ -15,13 +17,17 @@ main:
     bcall(_newline)
     bcall(_getkey) ; Pause
 
-    ld h, 78
-    ld l, 56
-    call mul_h_l
-    bcall(_disphl)
-    bcall(_newline)
+    ld hl, 0
+    ld (x + 1), hl
+    ld a, 8
+    ld (x), a
+
+    ld hl, x
+    ld de, 5
+    ld b, 3
+    call integer_sub_de
 
     bcall(_getkey) ; Pause
     ret
 
-#include "../util/mul_h_l.asm"
+#include "../util/integer/sub_de.asm"

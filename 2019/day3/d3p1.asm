@@ -4,6 +4,7 @@ title:
    .db "2019 d3p1",0
 
 #include "../../util/add_hl_a.asm"
+#include "../../util/xor_hl_de.asm"
 
 ; constants
 #define N 3
@@ -104,8 +105,31 @@ main:
         ex de, hl
         ; Now de points to next free space in hv lines
 
+        push de ; {2}
+
         ; copy from xy coord to hv lines
         ld hl, (xy_ptr)
+        ld bc, N
+        ldir
+
+        ; Do xor magic to get the other coord
+        ; (x_ptr ^ y_ptr) ^ xy_ptr = yx_ptr
+        ld hl, x
+        ld de, y
+        xor_hl_de
+        ld de, (xy_ptr)
+        xor_hl_de
+        ; hl is now the other coord
+
+        pop de ; {2}
+
+        ld a, N
+        ex de, hl
+        add_hl_a
+        ex de, hl
+        ; Now de points to next free space in hv lines (const coord)
+
+        ; copy const coord
         ld bc, N
         ldir
 
@@ -122,15 +146,12 @@ main:
         ld e, (hl)
         inc hl
         ld d, (hl)
-        ld a, N
-        ex de, hl
-        add_hl_a
-        ex de, hl
 
         ld h, d
         ld l, e
-        inc hl
-        inc hl
+
+        ld a, N
+        add_hl_a
 
         ld b, N
         call mem_swap
@@ -157,7 +178,7 @@ main:
         inc hl
         ld d, (hl)
         ex de, hl
-        ld a, 2 * N
+        ld a, 3 * N
         add_hl_a
         ex de, hl
         ld (hl), d
@@ -169,7 +190,7 @@ main:
         cp (hl)
         inc hl
         jp nz, loop1
-    
+
     ld hl, (h_lines)
     bcall(_disphl)
 
@@ -232,11 +253,11 @@ parse_dir:
 ; Memory to store the line segments. Number of segments given by first two
 ; bytes. Pointer to next free spot given in the next two bytes.
 ; Each line segment is given by the starting coord then the ending coord
-; as N byte integers.
+; as N byte integers, then the constant coord.
 h_lines:
-    .fill 2 * 2 + 160 * N * 2
+    .fill 2 * 2 + 10 * N * 3
 v_lines:
-    .fill 2 * 2 + 160 * N * 2
+    .fill 2 * 2 + 10 * N * 3
 
 input:
     #incbin "ex1.txt"
