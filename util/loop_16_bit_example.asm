@@ -26,7 +26,7 @@ loop_16_bit_double:
 
 loop_16_bit_single:
     ld bc, 1000
-    loop_16_bit_single_loop3:
+    loop_16_bit_single_loop:
         push bc
         ld l, c
         ld h, b
@@ -48,3 +48,22 @@ loop_16_bit_single:
     ; time: (11 * 3 + 10 * 4 + 6 + 17 + 10 + cp_logic) * n
     ; = (185 + cp_logic) * n
     ; size: 7 + 3 * 2 + 4 = 17
+
+loop_16_bit_single2:
+    ld bc, 1000
+    loop_16_bit_single2_loop:
+        push bc
+        ld l, c
+        ld h, b
+        bcall(_disphl)
+        bcall(_newline)
+        pop bc
+
+        xor a                               ; 4
+        dec bc                              ; 6
+        or b                                ; 4
+        jr nz, loop_16_bit_single2_loop     ; 12
+        or c                                ; 4
+        jr nz, loop_16_bit_single2_loop     ; 12
+
+    ; time: (4 + 6 + 4 + 12) * n = 26 n

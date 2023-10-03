@@ -11,13 +11,14 @@ title:
 #define BCD_N 4
 
 ; variables
-#define x saferam1
-#define y x + N
-#define buf y + N
-#define dist buf + N
-#define mindist dist + N
-#define xy_ptr mindist + N
-#define hv_ptr xy_ptr + 2
+#define x           saferam1
+#define y           x           + N
+#define buf1        y           + N
+#define buf2        buf1        + N
+#define dist        buf2        + N
+#define mindist     dist        + N
+#define xy_ptr      mindist     + N
+#define hv_ptr      xy_ptr      + 2
 
 #define bcd_buf saferam3
 
@@ -171,7 +172,7 @@ main:
         dec hl
         ld (hl), e
 
-        ; Increment pointer to next free (TODO: fix this)
+        ; Increment pointer to next free
         inc hl
         inc hl
         ld e, (hl)
@@ -191,13 +192,124 @@ main:
         inc hl
         jp nz, loop1
 
-    ld hl, (h_lines)
-    bcall(_disphl)
+    ; Lines from wire 1 are now stored. Now loop over lines in wire 1
+    ; and check which it crosses.
 
-    bcall(_newline)
+    push hl ; {0}
 
-    ld hl, (v_lines)
-    bcall(_disphl)
+    ; Set coords to 0
+    ld hl, x
+    xor a
+    ld b, 2 * N
+    call mem_set
+
+    pop hl ; {0}
+
+    loop2:
+        call parse_dir
+        inc hl
+
+        ld (xy_ptr), de
+        ld (hv_ptr), bc
+
+        push af ; {0}
+        push hl ; {1}
+
+        ld hl, integer_add_de
+        jr nc, pos_dir2
+        ld hl, integer_sub_de
+        pos_dir2:
+        ld (add_call2 + 1), hl
+
+        ; Copy starting coord
+        ld hl, buf1
+        ex de, hl
+        ld bc, N
+        ldir
+
+        pop hl ; {1}
+
+        call parse_u16 ; de is now number from inp
+
+        push hl ; {1}
+
+        ld hl, (xy_ptr)
+        ld b, N
+        add_call2:
+        call 0
+
+        ; copy ending coord
+        ld hl, (xy_ptr)
+        ld de, buf2
+        ld bc, N
+        ldir
+
+        pop hl ; {1}
+        pop af ; {0}
+        push hl ; {0}
+
+        ; If negative, swap start and end
+        jr nc, not_neg2
+        ld hl, buf1
+        ld de, buf2
+        ld b, N
+        call mem_swap
+        not_neg2:
+
+        ; Xor magic to swap hv_ptr since we want the opposite direction
+        ; lines to cross.
+        ld hl, h_lines
+        ld de, v_lines
+        xor_hl_de
+        ld de, (hv_ptr)
+        xor_hl_de
+        ld (hv_ptr), hl
+
+        ; Xor magic to swap xy_ptr to have axes to constant coord.
+        ld hl, x
+        ld de, y
+        xor_hl_de
+        ld de, (xy_ptr)
+        xor_hl_de
+        ld (xy_ptr), hl
+
+        ; Now buf1 containst start, buf2 end, and constant coord in xy_ptr
+
+        ; Now loop over all the first lines perpendicular to this new line
+
+        ld hl, (hv_ptr)
+        ld c, (hl)
+        inc hl
+        ld b, (hl)
+        inc hl \ inc hl \ inc hl
+        ; bc: loop count
+        ; hl: pointer to line segment data
+        loop3:
+            push bc ; {1}
+            push hl ; {2}
+
+            ; TODO: check if segments cross and return distance if they do.
+
+            pop hl ; {2}
+
+            ; Inc hl to next segment
+            ld a, 3 * N
+            add_hl_a
+
+            pop bc ; {1}
+            ; djnz
+            xor a
+            dec bc
+            or b
+            jr nz, loop3
+            or c
+            jr nz, loop3
+
+        pop hl ; {0}
+        ld a, '\n'
+        cp (hl)
+        inc hl
+        jp nz, loop2
 
     bcall(_getkey) ; Pause
     ret
@@ -234,11 +346,7 @@ parse_dir:
     ccf
     ret
 
-#include "../../util/integer/parse.asm"
 #include "../../util/integer/cmp.asm"
-#include "../../util/integer/cmp_a.asm"
-#include "../../util/integer/inc.asm"
-#include "../../util/integer/dec.asm"
 #include "../../util/integer/add_de.asm"
 #include "../../util/integer/sub_de.asm"
 
