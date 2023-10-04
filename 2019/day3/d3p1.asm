@@ -15,7 +15,8 @@ title:
 #define y           x           + N
 #define buf1        y           + N
 #define buf2        buf1        + N
-#define dist        buf2        + N
+#define buf3        buf2        + N
+#define dist        buf3        + N
 #define mindist     dist        + N
 #define xy_ptr      mindist     + N
 #define hv_ptr      xy_ptr      + 2
@@ -275,6 +276,14 @@ main:
 
         ; Now buf1 containst start, buf2 end, and constant coord in xy_ptr
 
+        ; Set mindist to int max
+        push hl ; {1}
+        ld hl, mindist
+        ld a, -1
+        ld b, N
+        call mem_set
+        pop hl ; {1}
+
         ; Now loop over all the first lines perpendicular to this new line
 
         ld hl, (hv_ptr)
@@ -288,7 +297,25 @@ main:
             push bc ; {1}
             push hl ; {2}
 
-            ; TODO: check if segments cross and return distance if they do.
+            ; Check if segments cross and return distance if they do.
+            call check_cross
+
+            jr nc, no_cross_loop
+
+            ; If cross find replace mindist if less
+            ld hl, dist
+            ld de, mindist
+            ld b, N
+            call integer_cmp
+
+            jr nc, no_cross_loop
+
+            ld hl, dist
+            ld de, mindist
+            ld bc, N
+            ldir
+
+            no_cross_loop:
 
             pop hl ; {2}
 
@@ -301,7 +328,6 @@ main:
             xor a
             dec bc
             or b
-            jr nz, loop3
             or c
             jr nz, loop3
 
@@ -346,7 +372,124 @@ parse_dir:
     ccf
     ret
 
+; input:
+;   hl: Pointer to entry in hv_lines (start, stop, const)
+;   other line in (buf1: start, buf2: stop, xy_ptr: const)
+; returns:
+;   carry flag set if cross
+;   dist in (dist)
+check_cross:
+    ; A cross occurs if the const of one line lies between the
+    ; start and end of the other and vice versa
+
+    ; Checking start <= xy_ptr
+        push hl
+        ex de, hl
+
+        ld hl, (xy_ptr)
+        ld a, (hl)
+        inc hl
+        ld h, (hl)
+        ld l, a
+
+        ld b, N
+        call integer_cmp_signed
+        pop hl
+        jp c, no_cross
+
+    ; Checking xy_ptr <= stop
+        push hl
+        ex de, hl
+
+        ld hl, (xy_ptr)
+        ld a, (hl)
+        inc hl
+        ld h, (hl)
+        ld l, a
+        ex de, hl
+
+        ld a, N
+        add_hl_a
+
+        ld b, N
+        call integer_cmp_signed
+        pop hl
+        jp c, no_cross
+
+    ld a, 2 * N
+    add_hl_a
+
+    ; Checking buf1 <= const
+        push hl
+        ex de, hl
+
+        ld hl, (buf1)
+        ld a, (hl)
+        inc hl
+        ld h, (hl)
+        ld l, a
+        ex de, hl
+
+        ld b, N
+        call integer_cmp_signed
+        pop hl
+        jp c, no_cross
+
+    ; Checking const <= buf2
+        push hl
+        ex de, hl
+
+        ld hl, (buf2)
+        ld a, (hl)
+        inc hl
+        ld h, (hl)
+        ld l, a
+
+        ld b, N
+        call integer_cmp_signed
+        pop hl
+        jp c, no_cross
+
+    ; They cross, find distance
+
+    ld de, dist
+    ld bc, N
+    ldir
+
+    ld hl, dist
+    ld b, N
+    call integer_abs
+
+    ld hl, (xy_ptr)
+    ld a, (hl)
+    inc hl
+    ld h, (hl)
+    ld l, a
+
+    ld de, buf3
+    ld bc, N
+    ldir
+
+    ld hl, buf3
+    ld b, N
+    call integer_abs
+
+    ld hl, dist
+    ld de, buf3
+    ld b, N
+    call integer_add
+
+    scf
+    ret
+
+    no_cross:
+    or a
+    ret
+
 #include "../../util/integer/cmp.asm"
+#include "../../util/integer/cmp_signed.asm"
+#include "../../util/integer/abs.asm"
+#include "../../util/integer/add.asm"
 #include "../../util/integer/add_de.asm"
 #include "../../util/integer/sub_de.asm"
 
