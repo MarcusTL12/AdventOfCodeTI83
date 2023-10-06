@@ -337,6 +337,17 @@ main:
         inc hl
         jp nz, loop2
 
+    ; print ans
+    ld hl, mindist
+    ld de, bcd_buf
+    ld b, N
+    ld c, BCD_N
+    call bcd_make
+
+    ld hl, bcd_buf
+    ld b, BCD_N
+    call bcd_print
+
     bcall(_getkey) ; Pause
     ret
 
@@ -374,7 +385,7 @@ parse_dir:
 
 ; input:
 ;   hl: Pointer to entry in hv_lines (start, stop, const)
-;   other line in (buf1: start, buf2: stop, xy_ptr: const)
+;   other line in (buf1: start, buf2: stop, (xy_ptr): const)
 ; returns:
 ;   carry flag set if cross
 ;   dist in (dist)
@@ -421,15 +432,7 @@ check_cross:
 
     ; Checking buf1 <= const
         push hl
-        ex de, hl
-
-        ld hl, (buf1)
-        ld a, (hl)
-        inc hl
-        ld h, (hl)
-        ld l, a
-        ex de, hl
-
+        ld de, buf1
         ld b, N
         call integer_cmp_signed
         pop hl
@@ -438,13 +441,7 @@ check_cross:
     ; Checking const <= buf2
         push hl
         ex de, hl
-
-        ld hl, (buf2)
-        ld a, (hl)
-        inc hl
-        ld h, (hl)
-        ld l, a
-
+        ld hl, buf2
         ld b, N
         call integer_cmp_signed
         pop hl
