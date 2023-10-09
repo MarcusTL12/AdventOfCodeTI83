@@ -1,6 +1,8 @@
 #ifndef integer_cmp_signed_inc
 #define integer_cmp_signed_inc
 
+#include "../op_f_f'.asm"
+
 #include "cmp.asm"
 #include "is_neg.asm"
 
@@ -29,14 +31,10 @@ integer_cmp_signed:
     ; f': hl negative
 
     ; flip f' if f
-    jr nc, integer_cmp_signed_not_flip
-    ex af, af'
-    ccf
-    ex af, af'
-    integer_cmp_signed_not_flip:
+    ; TODO: figure this out
+    op_f_f'(xor) ; xor f, f'
 
-    ex af, af'
-    jp nc, integer_cmp ; tail call if same sign
+    jp p, integer_cmp ; tail call if same sign
 
     ex af, af'
     ret

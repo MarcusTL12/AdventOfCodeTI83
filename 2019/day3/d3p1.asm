@@ -396,13 +396,7 @@ check_cross:
     ; Checking start <= xy_ptr
         push hl
         ex de, hl
-
         ld hl, (xy_ptr)
-        ld a, (hl)
-        inc hl
-        ld h, (hl)
-        ld l, a
-
         ld b, N
         call integer_cmp_signed
         pop hl
@@ -410,15 +404,7 @@ check_cross:
 
     ; Checking xy_ptr <= stop
         push hl
-        ex de, hl
-
-        ld hl, (xy_ptr)
-        ld a, (hl)
-        inc hl
-        ld h, (hl)
-        ld l, a
-        ex de, hl
-
+        ld de, (xy_ptr)
         ld a, N
         add_hl_a
 
