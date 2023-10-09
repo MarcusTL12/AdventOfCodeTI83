@@ -204,6 +204,12 @@ main:
     ld b, 2 * N
     call mem_set
 
+    ; Set mindist to int max
+    ld hl, mindist
+    ld a, -1
+    ld b, N
+    call mem_set
+
     pop hl ; {0}
 
     loop2:
@@ -276,14 +282,6 @@ main:
 
         ; Now buf1 containst start, buf2 end, and constant coord in xy_ptr
 
-        ; Set mindist to int max
-        push hl ; {1}
-        ld hl, mindist
-        ld a, -1
-        ld b, N
-        call mem_set
-        pop hl ; {1}
-
         ; Now loop over all the first lines perpendicular to this new line
 
         ld hl, (hv_ptr)
@@ -336,6 +334,11 @@ main:
         cp (hl)
         inc hl
         jp nz, loop2
+
+    ; Undo shift by one to get right answer
+    ld hl, mindist
+    ld b, N
+    call integer_inc
 
     ; print ans
     ld hl, mindist
@@ -444,11 +447,6 @@ check_cross:
     call integer_abs
 
     ld hl, (xy_ptr)
-    ld a, (hl)
-    inc hl
-    ld h, (hl)
-    ld l, a
-
     ld de, buf3
     ld bc, N
     ldir
@@ -461,6 +459,11 @@ check_cross:
     ld de, buf3
     ld b, N
     call integer_add
+
+    ; Subtract one to avoid 0 being a minimum length
+    ld hl, dist
+    ld b, N
+    call integer_dec
 
     scf
     ret
@@ -475,6 +478,8 @@ check_cross:
 #include "../../util/integer/add.asm"
 #include "../../util/integer/add_de.asm"
 #include "../../util/integer/sub_de.asm"
+#include "../../util/integer/inc.asm"
+#include "../../util/integer/dec.asm"
 
 #include "../../util/bcd/make.asm"
 #include "../../util/bcd/print.asm"
@@ -489,9 +494,9 @@ check_cross:
 ; Each line segment is given by the starting coord then the ending coord
 ; as N byte integers, then the constant coord.
 h_lines:
-    .fill 2 * 2 + 10 * N * 3
+    .fill 2 * 2 + 150 * N * 3
 v_lines:
-    .fill 2 * 2 + 10 * N * 3
+    .fill 2 * 2 + 150 * N * 3
 
 input:
     #incbin "ex1.txt"
