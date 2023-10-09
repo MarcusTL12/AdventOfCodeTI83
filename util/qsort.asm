@@ -1,13 +1,8 @@
 #ifndef qsort_inc
 #define qsort_inc
 
-#include "debug/push_all.asm"
-
 #include "add_hl_a.asm"
 #include "mul_a_hl.asm"
-#include "mul_h_l.asm"
-#include "div_hl_c.asm"
-#include "neg_hl.asm"
 #include "rand_hl.asm"
 
 #include "mem/swap.asm"
