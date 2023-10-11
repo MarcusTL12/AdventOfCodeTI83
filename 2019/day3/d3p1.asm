@@ -499,5 +499,5 @@ v_lines:
     .fill 2 * 2 + 150 * N * 3
 
 input:
-    #incbin "ex1.txt"
+    #incbin "ex2.txt"
     .db 0
