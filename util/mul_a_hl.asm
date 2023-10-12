@@ -1,6 +1,7 @@
 #ifndef mul_a_hl_inc
 #define mul_a_hl_inc
 
+#include "mul_h_l.asm"
 #include "add_hl_a.asm"
 
 ; output: 24-bit integer in ahl
