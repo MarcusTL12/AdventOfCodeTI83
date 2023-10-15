@@ -19,6 +19,8 @@ integer_mul:
     push de ; {1}
     push bc ; {2}
 
+    ld a, (hl) ; getting least digit of a
+
     ; Copy integer b into buffer
     push iy
     pop hl
@@ -27,26 +29,15 @@ integer_mul:
     ldir
 
     pop bc ; {2}
-    pop de ; {1}
-    pop hl ; {0}
-
-    push hl ; {0}
-    push de ; {1}
     push bc ; {2}
 
     ; Multiply buffer with least "digit" byte of integer a
-    ld a, (hl)
     push iy
     pop hl
     ld b, c
     call integer_mul_a
 
     pop bc ; {2}
-    pop de ; {1}
-    pop hl ; {0}
-
-    push hl ; {0}
-    push de ; {1}
     push bc ; {2}
 
     push af ; {3} overflow
