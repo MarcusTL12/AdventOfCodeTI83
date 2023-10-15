@@ -12,6 +12,8 @@
 ; c: number of bytes in b
 ; ix: pointer to answer location (a + b bytes)
 ; iy: pointer to buffer (b bytes)
+;
+; Will add to instead of overwriting ans
 integer_mul:
     push hl ; {0}
     push de ; {1}
