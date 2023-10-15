@@ -13,6 +13,6 @@ integer_add_a:
     ret nc
     inc hl
     dec b
-    jp integer_inc ; tail call
+    jp nz, integer_inc ; tail call
 
 #endif
