@@ -59,8 +59,6 @@ integer_mul:
     ld b, c
     call integer_add
 
-    ; Tricky: Get back over
-
     pop de ; {3} overflow
     pop bc ; {2}
     push bc ; {2}
