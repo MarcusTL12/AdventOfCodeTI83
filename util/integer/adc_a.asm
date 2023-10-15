@@ -1,5 +1,5 @@
-#ifndef integer_add_a_inc
-#define integer_add_a_inc
+#ifndef integer_adc_a_inc
+#define integer_adc_a_inc
 
 #include "inc.asm"
 
@@ -7,8 +7,8 @@
 ; a: number to add
 ; b: number of bytes
 ; destroys: hl, a, b
-integer_add_a:
-    add a, (hl)
+integer_adc_a:
+    adc a, (hl)
     ld (hl), a
     ret nc
     inc hl
