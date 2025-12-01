@@ -9,7 +9,7 @@
 ; de: set to number (zero if non numerical)
 ; hl: first character not in number
 ; destroys:
-; b
+; af, b
 parse_u16:
     ex de, hl
     ld hl, 0
