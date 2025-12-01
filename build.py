@@ -2,6 +2,10 @@ import subprocess
 import sys
 import os
 
+from pathlib import Path
+
+home = Path.home()
+
 os.makedirs("build", exist_ok=True)
 
 if sys.argv[1] == "test":
@@ -19,4 +23,4 @@ else:
     asm_path = f"{year}/day{day}/d{day}p{part}.asm"
     out_path = f"build/{year}-{day}p{part}.83p"
 
-subprocess.call(["brass", asm_path, out_path])
+subprocess.call(["mono", f"{home}/brass/Brass.exe", asm_path, out_path])
