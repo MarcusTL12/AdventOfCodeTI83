@@ -1,3 +1,6 @@
 [submodule "ion"]
 	path = ion
 	url = https://github.com/MarcusTL12/ion/
+[submodule "aoc-input"]
+	path = aoc-input
+	url = https://github.com/MarcusTL12/aoc-input
