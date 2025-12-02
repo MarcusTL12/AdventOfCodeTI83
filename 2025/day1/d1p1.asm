@@ -1,7 +1,5 @@
 #include "../../header.asm"
 
-#include "../../util/add_hl_a.asm"
-
 title:
    .db "2025 d1p1",0
 

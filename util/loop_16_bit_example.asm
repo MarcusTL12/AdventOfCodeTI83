@@ -62,8 +62,7 @@ loop_16_bit_single2:
         xor a                               ; 4
         dec bc                              ; 6
         or b                                ; 4
-        jr nz, loop_16_bit_single2_loop     ; 12
         or c                                ; 4
         jr nz, loop_16_bit_single2_loop     ; 12
 
-    ; time: (4 + 6 + 4 + 12) * n = 26 n
+    ; time: (4 + 6 + 4 + 4 + 12) * n = 30 n
